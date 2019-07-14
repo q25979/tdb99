@@ -1,0 +1,47 @@
+安装文档
+1. 所需环境
+  Centos7.2
+  Nginx
+  Python3.6
+  Python2.7
+  
+2. Nginx
+  做反向代理解析例子nginx文档中
+
+3. Python
+  安装教程：https://blog.csdn.net/metoo9527/article/details/80330877
+  Python安装3.6版本之后
+  安装Virtualenv版本控制
+  教程链接：https://blog.csdn.net/wangkun1340378/article/details/82380160
+
+4. api安装
+  所需环境：Python3.6
+  使用Virtualenv搭建虚拟环境
+  代码tdb-api
+  首先先导入数据库sql目录下
+  更改configuration数据库配置
+  安装 	pip install mysqlclient
+  		pip install mysql
+  然后运行python run.py 看所缺什么模块直接pip安装即可
+  Centos关闭终端运行命令 nohup python run.py &
+
+5. console后台控制安装
+  所需环境：Python2.7
+  使用Virtualenv搭建虚拟环境
+  代码tdb-console
+  然后运行python run.py 看所缺什么模块直接pip安装即可
+  Centos关闭终端运行命令 nohup python run.py &
+
+6. app前端代码
+  所需node环境，这里使用v10.16.0
+  npm run dev 本地环境运行
+  npm run production_build 生产环境打包
+  npm run staging_build 演示环境打包
+  打包好复制打包之后的代码放到tdb-codepush热更新目录下
+
+7. 后台默认账号密码
+  admin 888888
+
+
+
+
