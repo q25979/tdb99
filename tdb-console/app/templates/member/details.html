@@ -1,0 +1,1024 @@
+{% extends 'layout/main.html' %}
+{% set title = '会员详情' %}
+
+
+{% block head %}
+    <style>
+        .product-area {
+            width: 100%;
+            min-height: 200px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        .product-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 128px;
+            height: 128px;
+            margin-top: -64px;
+            margin-left: -64px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id="addSystemAdmin">
+        <div class="row">
+            <div class="col-lg-4">
+                <section class="panel">
+                    <header class="panel-heading">
+                        基本信息
+                    </header>
+                    <div class="panel-body">
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">用户ID</label>
+                                    <div class="col-lg-7">
+                                        <label class="control-label">{{ data.uid }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">手机号</label>
+                                    <div class="col-lg-7">
+                                        <label class="control-label">{{ data.mobile }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">姓名</label>
+                                    <div class="col-lg-7">
+                                        <label class="control-label">{{ data.name }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">微信</label>
+                                    <div class="col-lg-7">
+                                        <label class="control-label">{{ data.wechat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">性别</label>
+                                    <div class="col-lg-7">
+                                        <label class="control-label">{{ data.gender | gender_to_str }}</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-8">
+                <section class="panel">
+                    <header class="panel-heading">
+                        账号信息
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <section class="panel">
+                                    <div class="panel-body">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                {#                                                <div class="col-lg-3">#}
+                                                {#                                                    <label class="control-label font-16">总冻结钱包</label>#}
+                                                {#                                                    <div class="font-14">{{ data.total_frozen_coin | currency }}</div>#}
+                                                {#                                                </div>#}
+                                                <div class="col-lg-3">
+                                                    <label class="control-label font-16">总资产钱包</label>
+                                                    <div class="font-14">{{ data.assets.total_balance | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label class="control-label font-16">社区钱包</label>
+                                                    <div class="font-14">{{ data.assets.community_balance | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label class="control-label font-16">交易钱包</label>
+                                                    <div class="font-14">{{ (data.assets.transaction_balance) | currency }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="panel">
+                    <header class="panel-heading">
+                        操作
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <section class="panel">
+                                    <div class="form-horizontal text-center">
+                                        <div class="form-group">
+                                            <div class="col-lg-3">
+                                                <button class="btn btn-primary deposit-btn" style="width: 100%">
+                                                    钱包充值
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <button class="btn btn-primary change-profile-btn" style="width: 100%">
+                                                    修改会员信息
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <button class="btn btn-primary change-password-btn" style="width: 100%">
+                                                    修改密码
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <button class="btn btn-primary change-security-password-btn"
+                                                        style="width: 100%">修改安全密码
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            微信支付
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <section class="panel">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                {% if payment_dic.get('wechat_payment') %}
+
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">收款人</label>
+                                                        <div class="font-14">{{ payment_dic['wechat_payment']['name'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">微信号</label>
+                                                        <div class="font-14">{{ payment_dic['wechat_payment']['wechat'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">收款二维码 </label>
+                                                        <img src="{{ payment_dic['wechat_payment']['wechat_image'] }}"
+                                                             height="100px">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-warning payment-btn"
+                                                                data-id="{{ payment_dic['wechat_payment']['id'] }}"
+                                                                style="width: 50%">
+                                                            删除
+                                                        </button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-success"
+                                                                data-toggle="modal" data-target="#wechatModal"
+                                                                style="width: 50%">
+                                                            添加
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            支付宝支付
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <section class="panel">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                {% if payment_dic.get('alipay_payment') %}
+
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">收款人</label>
+                                                        <div class="font-14">{{ payment_dic['alipay_payment']['name'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">支付宝</label>
+                                                        <div class="font-14">{{ payment_dic['alipay_payment']['alipay'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">收款二维码 </label>
+                                                        <img src="{{ payment_dic['alipay_payment']['alipay_image'] }}"
+                                                             height="100px">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-warning payment-btn"
+                                                                data-id="{{ payment_dic['alipay_payment']['id'] }}"
+                                                                style="width: 50%">
+                                                            删除
+                                                        </button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-success "
+                                                                data-toggle="modal" data-target="#alipayModal"
+                                                                style="width: 50%">
+                                                            添加
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            银行卡支付
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <section class="panel">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                {% if payment_dic.get('bank_payment') %}
+
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">收款人</label>
+                                                        <div class="font-14">{{ payment_dic['bank_payment']['name'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">卡号</label>
+                                                        <div class="font-14">{{ payment_dic['bank_payment']['card_number'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">开户银行</label>
+                                                        <div class="font-14">{{ payment_dic['bank_payment']['bank'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-warning payment-btn"
+                                                                data-id="{{ payment_dic['bank_payment']['id'] }}"
+                                                                style="width: 50%">
+                                                            删除
+                                                        </button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-success"
+                                                                data-toggle="modal" data-target="#bankModal"
+                                                                style="width: 50%">
+                                                            添加
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            USDT支付
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <section class="panel">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                {% if payment_dic.get('usdt_payment') %}
+
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">地址</label>
+                                                        <div class="font-14">{{ payment_dic['usdt_payment']['address'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16">备注</label>
+                                                        <div class="font-14">{{ payment_dic['usdt_payment']['remark'] }}</div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label class="control-label font-16"></label>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-warning payment-btn"
+                                                                data-id="{{ payment_dic['usdt_payment']['id'] }}"
+                                                                style="width: 50%">
+                                                            删除
+                                                        </button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-lg-3">
+                                                        <button class="btn btn-success"
+                                                                data-toggle="modal" data-target="#usdtModal"
+                                                                style="width: 50%">
+                                                            添加
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('member.ajax_change_password') }}" method="post"
+                      id="changePasswordForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ change_password_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ data.uid }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">新密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_password_form.password(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">确认密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_password_form.confirm_new_password(class='form-control') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeSecurityModal" tabindex="-1" role="dialog" aria-labelledby="changeSecurityModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改安全密码</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('member.ajax_change_security') }}" method="post"
+                      id="changeSecurityForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ change_security_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ data.uid }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">新的安全密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_security_form.security_password(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">确认密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_security_form.confirm_new_password(class='form-control') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeProfileModal" tabindex="-1" role="dialog" aria-labelledby="changeProfileModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('member.ajax_change_profile') }}" method="post"
+                      id="changeProfileForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ change_profile_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ data.uid }}
+                                    </div>
+                                </div>
+                                {#                                <div class="form-group">#}
+                                {#                                    <label class="col-lg-3 control-label">动态级别</label>#}
+                                {#                                    <div class="col-lg-8">#}
+                                {#                                        {{ change_profile_form.rate_level(class='form-control') }}#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">手机号</label>
+                                    <div class="col-lg-8">
+                                        {{ change_profile_form.mobile(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">姓名</label>
+                                    <div class="col-lg-8">
+                                        {{ change_profile_form.name(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">微信号</label>
+                                    <div class="col-lg-8">
+                                        {{ change_profile_form.wechat(class='form-control') }}
+                                    </div>
+                                </div>
+                                {#                                <div class="form-group">#}
+                                {#                                    <label class="col-lg-3 control-label">邮箱</label>#}
+                                {#                                    <div class="col-lg-8">#}
+                                {#                                        {{ change_profile_form.email(class='form-control') }}#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">钱包充值</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('member.ajax_deposit') }}" method="post"
+                      id="depositForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ deposit_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ data.mobile }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">钱包</label>
+                                    <div class="col-lg-8">
+                                        {{ deposit_form.assets_type(class='form-control') }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">数额</label>
+                                    <div class="col-lg-8">
+                                        {{ deposit_form.amount(class='form-control') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="wechatModal" tabindex="-1" role="dialog" aria-labelledby="wechatModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">微信支付</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('member.ajax_add_payment') }}"
+                      id="add-wechat-payment"
+                      method="post">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ payment_form.hidden_tag() }}
+                                <input class="form-control" id="type" name="type" type="hidden" value="1">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">收款人</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ payment_form.name(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">微信号</label>
+                                    <div class="col-lg-8">
+                                        {{ payment_form.wechat(class='form-control') }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">二维码</label>
+
+                                    <div class="col-lg-5">
+                                        {{ payment_form.wechat_image(class='form-control', readonly=true) }}
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div style="position:relative">
+                                            <button class="btn btn-primary" type="button">上传图片</button>
+                                            <input type="file" class="filebtn" name="image" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="product-area">
+                                    <img src="{{ payment_form.wechat_image.data or '' }}" alt="" class="product-img">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alipayModal" tabindex="-1" role="dialog" aria-labelledby="alipayModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">支付宝支付</h4>
+                </div>
+                <form class="form-horizontal add-payment" action="{{ url_for('member.ajax_add_payment') }}"
+                      id="add-alipay-payment"
+                      method="post">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ payment_form.hidden_tag() }}
+                                <input class="form-control" id="type" name="type" type="hidden" value="2">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">收款人</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ payment_form.name(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">支付宝</label>
+                                    <div class="col-lg-8">
+                                        {{ payment_form.alipay(class='form-control') }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">二维码</label>
+
+                                    <div class="col-lg-5">
+                                        {{ payment_form.alipay_image(class='form-control', readonly=true) }}
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div style="position:relative">
+                                            <button class="btn btn-primary" type="button">上传图片</button>
+                                            <input type="file" class="filebtn" name="image" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="product-area">
+                                    <img src="{{ payment_form.alipay_image.data or '' }}" alt="" class="product-img">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="usdtModal" tabindex="-1" role="dialog" aria-labelledby="usdtModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">USDT支付</h4>
+                </div>
+                <form class="form-horizontal add-payment" action="{{ url_for('member.ajax_add_payment') }}"
+                      id="add-usdt-payment"
+                      method="post">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ payment_form.hidden_tag() }}
+                                <input class="form-control" id="type" name="type" type="hidden" value="3">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">地址</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ payment_form.address(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">备注</label>
+                                    <div class="col-lg-8">
+                                        {{ payment_form.remark(class='form-control') }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bankModal" tabindex="-1" role="dialog" aria-labelledby="bankModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">银行卡支付</h4>
+                </div>
+                <form class="form-horizontal add-payment" action="{{ url_for('member.ajax_add_payment') }}"
+                      id="add-bank-payment"
+                      method="post">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ payment_form.hidden_tag() }}
+                                <input class="form-control" id="type" name="type" type="hidden" value="0">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">收款人</label>
+                                    <div class="col-lg-8 admin-uid">
+                                        {{ payment_form.name(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">卡号</label>
+                                    <div class="col-lg-8">
+                                        {{ payment_form.card_number(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">开户行</label>
+                                    <div class="col-lg-8">
+                                        {{ payment_form.bank(class='form-control') }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $(function () {
+            var changePasswordForm = $('#changePasswordForm');
+            var changePasswordModal = $('#changePasswordModal');
+            var changePasswordBtn = $('.change-password-btn');
+
+            var changeSecurityBtn = $('.change-security-password-btn');
+            var changeSecurityForm = $('#changeSecurityForm');
+            var changeSecurityModal = $('#changeSecurityModal');
+
+            var changeProfileBtn = $('.change-profile-btn');
+            var changeProfileForm = $('#changeProfileForm');
+            var changeProfileModal = $('#changeProfileModal');
+
+            var depositBtn = $('.deposit-btn');
+            var depositModal = $('#depositModal');
+            var depositForm = $('#depositForm');
+
+            var wechatPaymentForm = $('#add-wechat-payment');
+            var alipayPaymentForm = $('#add-alipay-payment');
+            var usdtPaymentForm = $('#add-usdt-payment');
+            var bankPaymentForm = $('#add-bank-payment');
+
+            var imageUploadUrl = '{{ url_for('upload.product_image') }}';
+            $('input[type="file"]').on('change', function () {
+                var file = this.files[0];
+                var file_obj = this;
+                uploadImage(file, imageUploadUrl, function (err, url) {
+                    if (err) {
+                        alert(err);
+                    } else {
+                        $(file_obj).closest('.panel-body').find('.product-img').attr('src', url);
+                        $(file_obj).closest('.form-group').find('.form-control').val(url);
+                    }
+                });
+            });
+
+            wechatPaymentForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                wechatPaymentForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeProfileModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (wechatPaymentForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            alipayPaymentForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                alipayPaymentForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeProfileModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (alipayPaymentForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            usdtPaymentForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                usdtPaymentForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeProfileModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (usdtPaymentForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            bankPaymentForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                bankPaymentForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeProfileModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (bankPaymentForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+
+            changeProfileBtn.on('click', function () {
+                changeProfileModal.modal('show');
+            });
+
+            changeProfileForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                changeProfileForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeProfileModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (changeProfileForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            changePasswordBtn.on('click', function () {
+                changePasswordModal.modal('show');
+            });
+
+            changePasswordForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                changePasswordForm.resetFieldErrors().ajaxSubmit(function () {
+                    changePasswordModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (changePasswordForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            changeSecurityBtn.on('click', function () {
+                changeSecurityModal.modal('show');
+            });
+
+            changeSecurityForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                changeSecurityForm.resetFieldErrors().ajaxSubmit(function () {
+                    changeSecurityModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (changeSecurityForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            depositBtn.on('click', function () {
+                depositModal.modal('show');
+            });
+
+            depositForm.submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                depositForm.resetFieldErrors().ajaxSubmit(function () {
+                    depositModal.modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if (depositForm.applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    } else if (xhr.responseJSON.code == 1008) {
+                        if (xhr.responseJSON.message.reinvestment) {
+                            layer.msg('超过最大投资金额');
+                        } else if (xhr.responseJSON.message.balance) {
+                            layer.msg('余额不足');
+                        }
+                    } else if (xhr.responseJSON.code == 1001) {
+                        if (xhr.responseJSON.message.recharge) {
+                            layer.msg('充值记录不存在');
+                        }
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            $('.payment-btn').click('click', function () {
+                var $this = $(this);
+                layer.confirm('确认要删除该支付方式？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id')}),
+                        url: '{{ url_for('member.ajax_delete_payment') }}',
+                        success: function () {
+                            layer.msg('删除成功！');
+                            location.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

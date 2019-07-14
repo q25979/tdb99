@@ -1,0 +1,116 @@
+{% extends 'layout/main.html' %}
+{% set title = '消息列表' %}
+
+{% block content %}
+    <div class="panel bg-no">
+        <form id="filter-form" method="get">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>标题：</label>
+                    {{ filter_form.title(class_='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>用户编号：</label>
+                    {{ filter_form.uid(class_='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>状态：</label>
+                    {{ filter_form.status(class_='form-control') }}
+                </div>
+                <div class="search-item search-tabtn">
+                    <button id="search" type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    <th class="text-center">时间</th>
+                    <th class="text-center">用户编号</th>
+                    <th class="text-center">用户手机</th>
+                    <th class="text-center">标题</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script id="table-template" type="text/template">
+        <div>
+            <a href="{{ url_for('message.details',message_id='') }}${data}" target="_blank">
+                <label class="label btn-primary">查看详情</label>
+            </a>
+{#            <a data-id="${data}">#}
+{#                <label class="label btn-danger">删除</label>#}
+{#            </a>#}
+        </div>
+
+    </script>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <script src="/static/components/quantum/summernote/summernote.js"></script>
+    <script src="/static/components/quantum/summernote/lang/summernote-zh-CN.js"></script>
+    <script src="/static/assets/js/summernote-upload.js"></script>
+    <script>
+        $(function () {
+            var defaultRowOptions = {className: 'v-middle text-center'};
+            var $table = $('#admin-table');
+            var filterForm = $('#filter-form');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('created_timestamp', defaultRowOptions),
+                    dtUtils.columns.text('user.uid', defaultRowOptions),
+                    dtUtils.columns.text('user.mobile', defaultRowOptions),
+                    dtUtils.columns.text('title', defaultRowOptions),
+                    dtUtils.columns.dict('status', {{ STATUS_FLAG | tojson }}, defaultRowOptions),
+                    dtUtils.columns.tmpl('id', '#table-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('message.ajax_list') }}', filterForm)
+            }));
+            filterForm.submit(function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+                return false;
+            });
+
+
+            $table.on('click', '.btn-danger', function () {
+                var news_id = $(this).closest('a').data('id');
+                var btn = $(this);
+
+                layer.confirm('确认要删除吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function (index, layero) {
+                    layer.close(index);
+                    btn.button('loading');
+                    $.ajax({
+                        url: "{{ url_for('news.news_delete', news_id='') }}" + news_id,
+                        type: 'DELETE',
+                        json: true,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            table.ajax.reload();
+                        }
+                    }).always(function (data) {
+                        btn.button('reset');
+                    });
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'layout/main.html' %}
+{% set title = '会员注册' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+
+            <form method="post" action="{{ url_for('register.ajax_register_member') }}" id='form'
+                  class="form-horizontal">
+                {{ form.hidden_tag() }}
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>会员注册</h5>
+                    </header>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <label class="col-lg-1 control-label">手机号</label>
+                            <div class="col-lg-3">
+                                {{ form.mobile(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-1 control-label">登录密码</label>
+                            <div class="col-lg-3">
+                                {{ form.password(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-1 control-label">安全密码</label>
+                            <div class="col-lg-3">
+                                {{ form.security_password(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-1 control-label">推荐人</label>
+                            <div class="col-lg-3">
+                                {{ form.sponsor(class="form-control") }}
+                            </div>
+                        </div>
+                        {#                        <div class="form-group">#}
+                        {#                            <label class="col-lg-1 control-label">动态级别</label>#}
+                        {#                            <div class="col-lg-3">#}
+                        {#                                {{ form.rate_level(class="form-control") }}#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button type="submit" class="btn btn-primary" id="sureBtn">确定</button>
+                                <a href="{{ url_for('home.index') }}" class="btn btn-primary">取消</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        {#        $.support.transition = false#}
+
+        var form = $('#form');
+        form.submit(function (e) {
+            e.preventDefault();
+            var btn = $(this).find('button[type="submit"]');
+            btn.button('loading');
+            form.resetFieldErrors()
+                .ajaxSubmit(function () {
+                    layer.msg('注册成功');
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+
+                }).error(function (xhr) {
+                if (form.applyFieldErrors(xhr, {
+                    mapping: {},
+                    handler: 'popover-and-highlight'
+                })) {
+                    layer.msg('信息填写错误');
+                }
+
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.code == 1001) {
+                        if (xhr.responseJSON.message.sponsor) {
+                            layer.msg('推荐人不存在');
+                        } else if (xhr.responseJSON.message.placement) {
+                            layer.msg('安置上线不存在');
+                        }
+                    } else if (xhr.responseJSON.code == 1011) {
+                        if (xhr.responseJSON.message.uid) {
+                            layer.msg('编号已存在');
+                        } else if (xhr.responseJSON.message.placement) {
+                            layer.msg('安置上线已存在');
+                        }
+                    } else {
+                        layer.msg('未知错误');
+                    }
+                } else {
+                    layer.msg('系统错误');
+                }
+
+            }).always(function (data) {
+                btn.button('reset');
+            });
+        });
+    </script>
+{% endblock %}

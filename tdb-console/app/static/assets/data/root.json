@@ -1,0 +1,259 @@
+{
+  "info": {
+    "number": "root",
+    "level": "1",
+    "icon": 1
+  },
+  "tip": {
+    "name": "张三",
+    "level": "一级",
+    "left": "左区业绩",
+    "right": "右区业绩",
+    "time": "2016-7-6 10:21:19"
+  },
+  "left": {
+    "info": {
+      "number": "left",
+      "level": "1",
+      "icon": "L"
+    },
+    "tip": {
+      "name": "张三",
+      "level": "一级",
+      "left": "左区业绩",
+      "right": "右区业绩",
+      "time": "2016-7-6 10:21:19"
+    },
+    "left": {
+      "info": {
+        "number": "left-1",
+        "level": "1",
+        "icon": 2
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "left": {
+        "info": {
+          "number": "left-1-1",
+          "level": "1",
+          "icon": 3
+        },
+        "tip": {
+          "name": "张三",
+          "level": "一级",
+          "left": "左区业绩",
+          "right": "右区业绩",
+          "time": "2016-7-6 10:21:19"
+        },
+        "super": "left-1"
+      },
+      "add": true,
+      "super": "left"
+    },
+    "mid": {
+      "info": {
+        "number": "left-2",
+        "level": "1",
+        "icon": 4
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "left": {
+        "info": {
+          "number": "left-2-1",
+          "level": "1",
+          "icon": 3
+        },
+        "tip": {
+          "name": "张三",
+          "level": "一级",
+          "left": "左区业绩",
+          "right": "右区业绩",
+          "time": "2016-7-6 10:21:19"
+        },
+        "super": "left-2"
+      },
+      "super": "left"
+    },
+    "right": {
+      "info": {
+        "number": "left-3",
+        "level": "1",
+        "icon": 4
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "super": "left"
+    },
+    "super": "root"
+  },
+  "mid": {
+    "info": {
+      "number": "mid",
+      "level": "1",
+      "icon": "L"
+    },
+    "tip": {
+      "name": "张三",
+      "level": "一级",
+      "left": "左区业绩",
+      "right": "右区业绩",
+      "time": "2016-7-6 10:21:19"
+    },
+    "left": {
+      "info": {
+        "number": "mid-1",
+        "level": "1",
+        "icon": 2
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "left": {
+        "info": {
+          "number": "mid-1-1",
+          "level": "1",
+          "icon": 3
+        },
+        "tip": {
+          "name": "张三",
+          "level": "一级",
+          "left": "左区业绩",
+          "right": "右区业绩",
+          "time": "2016-7-6 10:21:19"
+        },
+        "super": "mid-1"
+      },
+      "mid": {
+        "info": {
+          "number": "mid-1-2",
+          "level": "1",
+          "icon": 3
+        },
+        "tip": {
+          "name": "张三",
+          "level": "一级",
+          "left": "左区业绩",
+          "right": "右区业绩",
+          "time": "2016-7-6 10:21:19"
+        },
+        "super": "mid-1"
+      },
+      "super": "mid"
+    },
+    "mid": {
+      "info": {
+        "number": "mid-2",
+        "level": "1",
+        "icon": 4
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "add": true,
+      "super": "mid"
+    },
+    "right": {
+      "info": {
+        "number": "mid-3",
+        "level": "1",
+        "icon": 4
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "add": true,
+      "super": "mid"
+    },
+    "super": "root"
+  },
+  "right": {
+    "info": {
+      "number": "right",
+      "level": "1",
+      "icon": 5
+    },
+    "tip": {
+      "name": "张三",
+      "level": "一级",
+      "left": "左区业绩",
+      "right": "右区业绩",
+      "time": "2016-7-6 10:21:19"
+    },
+    "left": {
+      "info": {
+        "number": "right-1",
+        "level": "1",
+        "icon": 1
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "super": "right"
+    },
+    "mid": {
+      "info": {
+        "number": "right-2",
+        "level": "1",
+        "icon": "L"
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "add": true,
+      "super": "right"
+    },
+    "right": {
+      "info": {
+        "number": "right-3",
+        "level": "1",
+        "icon": "L"
+      },
+      "tip": {
+        "name": "张三",
+        "level": "一级",
+        "left": "左区业绩",
+        "right": "右区业绩",
+        "time": "2016-7-6 10:21:19"
+      },
+      "add": true,
+      "super": "right"
+    },
+    "super": "root"
+  }
+}

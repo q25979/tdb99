@@ -1,0 +1,334 @@
+{% extends 'layout/main.html' %}
+{% set title = '系统设置' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <h3>系统设置</h3>
+                </header>
+            </section>
+            <form method="post" action="{{ url_for('setting.index') }}" id="setting_form" class="form-horizontal">
+                {{ setting_form.hidden_tag() }}
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>测评奖励</h5>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">测评奖励(美元)</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.evaluation_reward_amount(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>转换</h5>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">交易钱包转社区钱包最大</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.exchange_amount_max(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>社区节点</h5>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">节点收益</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_dividend_rate(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">转账手续费</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_transaction_fee_rate(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">合格会员连续交易天数</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_transaction_day_cnt(class="form-control") }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">前314名节点总资产</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_total_balance_1(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">中400名节点总资产</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_total_balance_2(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">尾600名节点总资产</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_total_balance_3(class="form-control") }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">前314名节点合格用户</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_sponsor_cnt_1(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">中400名节点合格用户</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_sponsor_cnt_2(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">尾600名节点合格用户</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_sponsor_cnt_3(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>交易</h5>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">单人一天最大买单数</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.buy_count(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">单人一天最大卖单数</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.sell_count(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">系统一天挂卖数量</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.sell_people(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">系统一天挂买数量</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.buy_people(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">价额调控笔数</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.lebo_change_price_cnt(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">调控价格</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.lebo_price_step(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">开启交易数量</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_allow_amount(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">释放手续费</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.buy_sell_rate(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">普通会员加速释放</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_free_amount(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">社区节点加速释放</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.community_free_amount(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">上午开始时间</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_time_begin_1(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">上午结束时间</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_time_end_1(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">下午开始时间</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_time_begin_2(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">下午结束时间</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.transaction_time_end_2(class="form-control") }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>推荐奖励</h5>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第一代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_1(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第二代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_2(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第三代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_3(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第四代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_4(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第五代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_5(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第六代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_6(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第七代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_7(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第八代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_8(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第九代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_9(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">第十代</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.recommend_reward_amount_10(class="form-control") }}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h5>联系我们</h5>
+                    </header>
+
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">联系我们</label>
+                            <div class="col-lg-7">
+                                {{ setting_form.contact_us(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button type="submit" class="btn btn-primary" id="sureBtn">确定</button>
+                                <a href="{{ url_for('home.index') }}" class="btn btn-primary">取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="/static/components/quantum/js/bootstrap-timepicker.min.js"></script>
+
+    <script type="text/javascript">
+        {#        $.support.transition = false#}
+        $("#transaction_time_begin_1, #transaction_time_begin_2, #transaction_time_end_1, #transaction_time_end_2").timepicker({
+            minuteStep: 1,
+            showMeridian: false
+        });
+
+
+        var setting_form = $('#setting_form');
+        setting_form.submit(function (e) {
+            e.preventDefault();
+            var btn = $(this).find('button[type="submit"]');
+
+            setting_form.resetFieldErrors()
+                .ajaxSubmit(function () {
+                    layer.msg('修改成功');
+                }).error(function (xhr) {
+                if (setting_form.applyFieldErrors(xhr, {
+
+                        handler: 'popover-and-highlight'
+                    })) {
+                    layer.msg('信息填写错误');
+                }
+            }).always(function (data) {
+                btn.button('reset');
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,15 @@
+/.idea/
+/instance/*
+/logs/*
+!/instance/readme.txt
+/venv/
+/tmp/*
+/build/node_modules
+/build/staging
+/build/temp
+/build/dist
+/build/oss-cache.json
+*.DS_Store
+*.pyc
+*.log
+*.pem

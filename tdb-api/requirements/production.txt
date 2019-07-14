@@ -1,0 +1,5 @@
+-r development.txt
+gevent==1.3.7
+greenlet==0.4.15
+gunicorn==19.6.0
+Cython==0.28.2

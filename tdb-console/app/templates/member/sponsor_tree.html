@@ -1,0 +1,125 @@
+{% extends 'layout/main.html' %}
+{% set title = '推荐网络图' %}
+
+{% block head %}
+    <!-- build:css /static/components/sponsorTree.min.css -->
+    <link href="/static/assets/css/jsTree.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/assets/css/jquery.contextMenu.css">
+    <!-- endbuild -->
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="panel bg-no">
+        <div class="panel-body clearfix">
+            <div class="search-item">
+                <label>用户名</label>
+                <input type="text" placeholder="请输入用户名" id="user_id" class="form-control">
+            </div>
+            <div class="search-item search-tabtn">
+                <button type="button" id="search" class="btn btn-primary btn-flat">查询</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="panel">
+        <div class="panel-body">
+            <div class="content">
+                <div id="jstree"></div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block script %}
+    <!-- build:js /static/components/sponsorTree.min.js -->
+    <script src="/static/assets/data/mockData.js"></script>
+    <script src="/static/assets/js/jquery.ui.position.js"></script>
+    <script src="/static/assets/js/jquery.contextMenu.js"></script>
+    <script src="/static/assets/js/jsTree/jstree.min.js"></script>
+    <!-- endbuild -->
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#search").on('click', function () {
+                window.location = "{{ url_for('member.sponsor',
+                                          user_id='') }}" + $('#user_id').val();
+            });
+
+            $('#jstree').jstree({
+                'core': {
+                    'data': function (node, cb) {
+                        if (node.id === "#") {
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url_for("member.ajax_sponsor_downline") }}',
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    text: '{{ '13288888888' if not request.args.get('user_id') else request.args.get('user_id') }}',
+                                    unique_id: '{{ '13288888888' if not request.args.get('user_id') else request.args.get('user_id') }}'
+                                }),
+                                success: function (data) {
+                                    cb(data);
+                                },
+                                error: function (err) {
+                                    layer.msg('用户名不存在', function() {
+                                       window.location.href = '{{ url_for('member.sponsor') }}';
+                                    });
+                                    cb({'icon': 'fa fa-user'});
+                                }
+                            });
+                        } else {
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url_for("member.ajax_sponsor_downline") }}',
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    unique_id: node.id,
+                                    text: node.text
+                                }),
+                                success: function (data) {
+                                    cb(data);
+                                },
+                                error: function (err) {
+                                    layer.msg('用户名不存在', function() {
+                                       window.location.href = '{{ url_for('member.sponsor') }}';
+                                    });
+                                    cb({'icon': 'fa fa-user'});
+                                }
+                            });
+                        }
+
+                    },
+                },
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    },
+                    'html': {
+                        'icon': 'fa fa-file-code-o'
+                    },
+                    'svg': {
+                        'icon': 'fa fa-file-picture-o'
+                    },
+                    'css': {
+                        'icon': 'fa fa-file-code-o'
+                    },
+                    'img': {
+                        'icon': 'fa fa-file-image-o'
+                    },
+                    'js': {
+                        'icon': 'fa fa-file-text-o'
+                    }
+                },
+                'plugins': ['types', 'dnd'],
+            });
+        });
+    </script>
+{% endblock %}
+

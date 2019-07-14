@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.png">
+
+    <title>管理系统</title>
+
+    <!-- build:css /static/assets/css/login.min.css -->
+    <!-- Bootstrap core CSS -->
+    <link href="/static/components/quantum/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="/static/components/quantum/css/bootstrap-reset.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/static/components/quantum/css/font-awesome.css" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="/static/assets/css/style.css" rel="stylesheet">
+    <link href="/static/assets/css/style-responsive.css" rel="stylesheet"/>
+    <!-- endbuild -->
+
+</head>
+
+<body class="login-body">
+
+<div class="container">
+    <!--header start-->
+    <header class="headerlogin divheader">
+        <!--logo start-->
+        <a href="index.html" class="logoo">
+{#            <div class="logobgcolor"></div>#}
+        </a>
+        <!--logo end-->
+    </header>
+    <!--header end-->
+    <div class="positondiv">
+        <form class="form-signin" method="post" action="{{ url_for('home.login') }}">
+            <h2 class="form-signin-heading">管理后台</h2>
+            <div class="login-wrap">
+
+                {{ form.hidden_tag() }}
+                {{ form.uid(class_='form-control', placeholder='用户账号') }}
+                {{ form.password(class_='form-control', placeholder='密码') }}
+                {{ form.captcha(class_='form-control', placeholder='验证码') }}
+                {{ form.uuid() }}
+                <div class="form-inline">
+                    <label class="form-inline">
+                        <img class="pin_code_img" id="captcha-img" data-url="/captcha">
+                        <span style="font-family: serif">看不清楚？请换张图片</span>
+                    </label>
+
+                </div>
+                <label class="checkbox">
+                <span class="pull-right">
+{#                    <a href="change_password.html">密码重置</a>#}
+                </span>
+                </label>
+                <button class="btn btn-lg btn-login btn-block" type="submit" id="submit">确认登陆</button>
+                <div class="explain-error m-t-10">
+                    {% for field in form.errors %}
+                        {% for error in form.errors[field] %}
+                            <div class="login-erroo">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if login_error %}
+                        <div class="login-erroo">{{ login_error }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <!--footer start-->
+    <footer class="logo-footer">
+        <div class="text-center">
+            ©2018 Administration Console
+        </div>
+    </footer>
+    <!--footer end-->
+</div>
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="/static/components/quantum/js/jquery-1.8.3.min.js"></script>
+<script src="/static/components/quantum/js/bootstrap.min.js"></script>
+<script>
+    function generateUUID() {
+        var d = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+    ;
+
+    $(document).ready(function () {
+        $('#captcha-img').click(function () {
+            var uuid = generateUUID();
+            $("#uuid").val(uuid);
+            $(this).attr('src', $(this).data('url') + "?uuid=" + uuid);
+        }).click();
+    })
+
+</script>
+
+</body>
+
+</html>

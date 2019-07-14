@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="ShiDaiWL">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.png">
+    <meta name="description" content="ShiDaiWL Administration Console">
+    <meta name="renderer" content="webkit">
+
+
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+    <!-- build:css /static/components/quantum.min.css -->
+    <!-- Bootstrap core CSS -->
+    <link href="/static/components/quantum/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+    <link href="/static/components/quantum/css/bootstrap-reset.css" rel="stylesheet">
+    <!-- Icon Set -->
+    <link href="/static/components/quantum/css/icon.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/static/components/quantum/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="/static/components/quantum/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="/static/components/quantum/css/owl.carousel.css" type="text/css">
+    <!-- endbuild -->
+
+    <!-- build:css /static/assets/css/app.min.css -->
+    <!-- Core css -->
+    <link rel="stylesheet" href="/static/assets/vendor/layer/skin/layer.css">
+    <!-- Custom styles for this template -->
+    <link href="/static/assets/css/style.css" rel="stylesheet">
+    <link href="/static/assets/css/style-responsive.css" rel="stylesheet"/>
+    <link href="/static/assets/css/page.css" rel="stylesheet">
+    <link href="/static/assets/css/page-extend.css" rel="stylesheet">
+    <!-- endbuild -->
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+
+<section id="container">
+    <!--header start-->
+    <header class="header white-bg">
+        <div class="sidebar-toggle-box">
+            <div data-original-title="收放侧边栏" data-placement="right"
+                 class="fa fa-bars fa-2x tooltips"></div>
+        </div>
+        <!--logo start-->
+        <a href="{{ url_for('home.index') }}" class="logo">
+            <div>管理后台</div>
+        </a>
+        <!--logo end-->
+        <div class="top-nav ">
+            <!--search & user info start-->
+            <ul class="nav pull-right top-menu">
+                <!-- user login dropdown start-->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <img alt="" src="/static/assets/images/avatar-mini3.jpg">
+                        <span class="username">{{ session['uid'] }}</span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu extended logout">
+                        <!--<div class="log-arrow-up"></div>-->
+                        <li><a href="{{ url_for('home.change_password') }}"><i class="icon-suitcase"></i>修改密码</a></li>
+
+                        <li><a href="{{ url_for('home.logout') }}"><i class="icon-key"></i>退出</a></li>
+                    </ul>
+                </li>
+                <!-- user login dropdown end -->
+            </ul>
+            <!--search & user info end-->
+        </div>
+    </header>
+    <!--header end-->
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+
+                {% macro side_nav(icon, blueprint, endpoint, title, url) %}
+                    <li {% if request.blueprint == blueprint %}class="active"{% endif %}>
+                        <a href="{{ url_for('%s.%s' % (blueprint, endpoint)) }}">
+                            <i class="{{ icon }}"></i>
+                            <span>{{ title }}</span>
+                        </a>
+                    </li>
+                    {% if redirection %}
+                        <script>window.location.href = '{{ url_for('%s.%s' % (blueprint, endpoint)) }}';</script>
+                    {% endif %}
+
+                {% endmacro %}
+
+                {% macro multi_level_side_nav(icon, blueprint, title, submenus) %}
+                    {% if blueprint in session['permission'] or session['role'] == 1 %}
+                        <li class="sub-menu ">
+                            <a href="javascript:;" class="{% if request.blueprint == blueprint %}active{% endif %}">
+                                <i class="{{ icon }}"></i> <span>{{ title }}</span>
+                            </a>
+
+
+                            <ul class="sub">
+                                {% for submenu in submenus %}
+                                    {% set endpoint = '%s.%s' % (blueprint, submenu[0]) %}
+                                    <li {% if request.endpoint == endpoint %}class="active"{% endif %}>
+                                        <a href="{{ url_for(endpoint) }}">{{ submenu[1] }}</a>
+                                    </li>
+                                    {% if redirection %}
+                                        <script>window.location.href = '{{ url_for(endpoint) }}';</script>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endmacro %}
+
+
+                {#                {{ multi_level_side_nav('fa fa-line-chart', 'analyze', '数据分析', [#}
+                {#                                        ('amount', '收入分析'),#}
+                {#                                        ('game', '游戏分析'),#}
+                {#                                        ('payment', '付款分析'),#}
+                {#                                        ('usage_rate', '使用率分析'),#}
+                {#                                                ]) }}#}
+                {#                {{ side_nav('fa fa-users', 'member','index' ,'会员管理') }}#}
+                {{ multi_level_side_nav('icon-user', 'member', '会员管理',
+                        [('index', '会员列表'),
+                        ('sponsor', '推荐网络图')
+                        ]) }}
+
+                {{ multi_level_side_nav('fa fa-line-chart', 'wallet', '财务管理',
+                        [
+                        ('index', '记录详情')]) }}
+                {{ multi_level_side_nav('fa fa-newspaper-o', 'news', '新闻管理',
+                        [('index', '公告列表'),
+                        ('details', '添加公告')]) }}
+                {#                {{ multi_level_side_nav('fa fa-envelope-o', 'message', '消息管理',#}
+                {#                        [('index', '消息列表')]) }}#}
+                {{ multi_level_side_nav('fa fa-th-list', 'p2p_order', '交易订单',
+                        [
+                        ('statistics', '统计'),
+                        ('index', '匹配列表'),
+                        ('sell_pending', '挂卖列表'),
+                        ('buy_pending', '挂买列表'),
+                        ('cancel', '取消列表'),
+                        ]) }}
+                {#                {{ multi_level_side_nav('fa fa-shopping-cart', 'mall', '商品管理',#}
+                {#                        [('index', '商品列表'),#}
+                {#                        ('details', '添加商品')]) }}#}
+                {#                {{ multi_level_side_nav('fa fa-th-list', 'order', '空投管理',#}
+                {#                        [('index', '空投列表')]) }}#}
+                {{ multi_level_side_nav('icon-glass', 'admin', '管理员管理',
+                [('index', '管理员列表'),
+                 ('add_user', '添加管理员')]) }}
+                {{ multi_level_side_nav('icon-user', 'register', '会员注册',
+                        [('register_member', '注册')
+                        ]) }}
+                {#                {{ multi_level_side_nav('fa fa-line-chart', 'analyze', '营业日报',#}
+                {#                        [('index', '营业日报')]) }}#}
+
+                {{ multi_level_side_nav('icon-cogs', 'setting', '系统设置',
+                        [('index', '系统参数')]) }}
+
+                {#                {{ multi_level_side_nav('icon-cogs', 'setting_order', '点对点设置',#}
+                {#                        [('order', '点对点参数')]) }}#}
+                {#                {{ multi_level_side_nav('fa fa-shopping-cart', 'reseller', '联盟商家',#}
+                {#                        [('index', '商家列表'),#}
+                {#                        ('details', '添加商家')]) }}#}
+
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+    <!--main content start-->
+
+    <section id="main-content">
+        <section class="wrapper">
+            {% block content %}
+
+            {% endblock %}
+        </section>
+        <!--main content end-->
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                © 2018 Administration Console
+            </div>
+        </footer>
+        <!--footer end-->
+    </section>
+
+</section>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<!-- build:js /static/components/quantum.min.js -->
+<script src="/static/components/quantum/js/jquery-1.11.2.min.js"></script>
+<script src="/static/components/quantum/js/bootstrap.min.js"></script>
+<script class="include" type="text/javascript"
+        src="/static/components/quantum/js/jquery.dcjqaccordion.2.7.js"></script>
+<script src="/static/components/quantum/js/jquery.scrollTo.min.js"></script>
+<script src="/static/components/quantum/js/jquery.nicescroll.js" type="text/javascript"></script>
+<script src="/static/components/quantum/js/jquery.sparkline.js" type="text/javascript"></script>
+<script src="/static/components/quantum/js/jquery.easy-pie-chart.js"></script>
+<script src="/static/components/quantum/js/owl.carousel.js"></script>
+<script src="/static/components/quantum/js/jquery.customSelect.min.js"></script>
+<script src="/static/components/quantum/js/respond.min.js"></script>
+<!-- dataTables -->
+<script src="/static/components/quantum/js/jquery.dataTables.min.js"></script>
+<script src="/static/components/quantum/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/components/quantum/js/dataTables.select.min.js"></script>
+<!--common script for all pages-->
+<script src="/static/components/quantum/js/common-scripts.js"></script>
+<!--script for this page-->
+<script src="/static/components/quantum/js/sparkline-chart.js"></script>
+<script src="/static/components/quantum/js/jquery.autocomplete.js"></script>
+<!-- endbuild -->
+
+<!-- build:js /static/assets/app.min.js -->
+<script src="/static/assets/vendor/layer/layer.js"></script>
+<script src="/static/assets/js/summernote-upload.js"></script>
+<script src="/static/assets/js/jquery.tmpl.js"></script>
+<script src="/static/assets/js/jquery.serialize-object.js"></script>
+<script src="/static/assets/js/ajax-helper.js"></script>
+<script src="/static/assets/js/autocomplete-helper.js"></script>
+<!-- endbuild -->
+
+{% block script %}
+{% endblock %}
+
+</body>
+</html>

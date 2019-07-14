@@ -1,0 +1,132 @@
+{% extends 'layout/main.html' %}
+{% set title = '钱包列表' %}
+
+{% block content %}
+
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>手机：</label>
+                    {{ filter_form.mobile(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>推荐码：</label>
+                    {{ filter_form.uid(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>币种：</label>
+                    {{ filter_form.currency_code(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>地址：</label>
+                    {{ filter_form.address(class='form-control') }}
+                </div>
+
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+                {#                <div class="search-item search-tabtn">#}
+                {#                    <button id="download" class="btn btn-warning">导出Excel</button>#}
+                {#                </div>#}
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">手机号</th>
+                    <th class="text-center">推荐码</th>
+                    <th class="text-center">用户昵称</th>
+                    <th class="text-center">币种</th>
+                    <th class="text-center">余额</th>
+                    <th class="text-center">地址</th>
+                    <th class="text-center" style="width: 120px">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <script id="operation-template" type="text/template">
+            <a data-id="${data}" class="label btn-danger confirm-btn">
+                充值
+            </a>
+        </script>
+    </div>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+
+    <script>
+
+        $("#download").on('click', function () {
+
+            window.open("{{ url_for('wallet.record_download') }}?" +
+                'uid=' + $('#uid').val() +
+                '&wallet_type=' + $('#wallet_type').val() +
+                '&type=' + $('#type').val() +
+                '&created_begin_timestamp=' + $('#created_begin_timestamp').val() +
+                '&created_end_timestamp=' + $('#created_end_timestamp').val());
+        });
+        $(function () {
+
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.text('user.mobile', defaultRowOptions),
+                    dtUtils.columns.text('user.uid', defaultRowOptions),
+                    dtUtils.columns.text('user.name', defaultRowOptions),
+                    dtUtils.columns.text('currency_code', defaultRowOptions),
+                    dtUtils.columns.text('balance', defaultRowOptions),
+                    dtUtils.columns.text('address', defaultRowOptions),
+                    dtUtils.columns.tmpl('id', '#operation-template', defaultRowOptions)
+
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('wallet.assets_ajax_list') }}', filterForm)
+            }));
+
+            filterForm.submit(function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+                return false;
+            });
+
+            $table.on('click', '.confirm-btn', function () {
+                var $this = $(this);
+                layer.prompt({title: '请输入充值金额'}, function (value, index) {
+                    layer.close(index);
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id'), amount: value}),
+                        url: '{{ url_for('wallet.ajax_recharge') }}',
+                        success: function () {
+                            layer.msg('操作成功');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+        });
+    </script>
+{% endblock %}

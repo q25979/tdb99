@@ -1,0 +1,233 @@
+{% extends 'layout/main.html' %}
+{% set title = '管理员列表' %}
+
+{% block content %}
+
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">创建时间</th>
+                    <th class="text-center">用户名</th>
+{#                    <th class="text-center">权限</th>#}
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('admin.ajax_change_password') }}" method="post"
+                      id="changePasswordForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ change_password_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">管理员用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">新密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_password_form.password(class='form-control') }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">确认密码</label>
+                                    <div class="col-lg-8">
+                                        {{ change_password_form.confirm_new_password(class='form-control') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeRoleModal" tabindex="-1" role="dialog" aria-labelledby="changeRoleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改权限</h4>
+                </div>
+                <form class="form-horizontal" action="{{ url_for('admin.ajax_change_role') }}" method="post"
+                      id="changeRoleForm">
+                    <div class="modal-body">
+                        <section class="panel">
+                            <div class="panel-body">
+                                {{ change_role_form.hidden_tag() }}
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">管理员用户名</label>
+                                    <div class="col-lg-8 admin-uid">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">权限</label>
+                                    <div class="col-lg-8">
+                                        {{ change_role_form.role(class='form-control') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script id="operation-template" type="text/template">
+        <a class="label btn-warning change-password" data-id="${data}" data-uid="${row.uid}"
+           href="{{ url_for('admin.add_user', user_id='') }}${data}">编辑</a>
+        {% raw %}
+        {{if row.locked}}
+        <a data-id="${data}" data-lock="${row.locked}" class="label btn-default change-lock">
+            解锁
+        </a>
+        {{else}}
+        <a data-id="${data}" data-lock="${row.locked}" class="label btn-danger change-lock">
+            锁定
+        </a>
+        {{/if}}
+        {% endraw %}
+    </script>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            var lockStatus = {1: '锁定', 0: '未锁定'};
+            var roleStatus = {1: '超级管理员', 2: '系统管理员'};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('created_timestamp', defaultRowOptions),
+                    dtUtils.columns.text('uid', defaultRowOptions),
+{#                    dtUtils.columns.dict('role', roleStatus, defaultRowOptions),#}
+                    dtUtils.columns.dict('locked', lockStatus, defaultRowOptions),
+                    dtUtils.columns.tmpl('id', '#operation-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('admin.ajax_list') }}', filterForm)
+            }));
+
+            $table.on('click', '.change-lock', function () {
+                var text = $(this).text();
+                var $this = $(this);
+                console.log($(this).data('lock'));
+                var targetLocked = $(this).data('lock') ? 0 : 1;
+                layer.confirm('确认要' + text + '这个管理员吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id'), locked: targetLocked}),
+                        url: '{{ url_for('admin.ajax_lock') }}',
+                        success: function () {
+                            layer.msg(text + '成功！');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+
+{#            $table.on('click', '.change-password', function () {#}
+{#                $('#id').val($(this).data('id'));#}
+{#                $('.admin-uid').text($(this).data('uid'));#}
+{#                $('#password').val('');#}
+{#                $('#changePasswordModal').modal('show');#}
+{#            });#}
+
+            $table.on('click', '.change-role', function () {
+                $('#user_id').val($(this).data('id'));
+                $('.admin-uid').text($(this).data('uid'));
+                $('#role').val($(this).data('role'));
+                $('#changeRoleModal').modal('show');
+            });
+
+            $('#changePasswordForm').submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                $('#changePasswordForm').resetFieldErrors().ajaxSubmit(function () {
+                    $('#changePasswordForm').modal('hide');
+                    layer.msg('操作成功', function() {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if ($('#changePasswordForm').applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            $('#changeRoleForm').submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                $('#changeRoleForm').resetFieldErrors().ajaxSubmit(function () {
+                    $('#changeRoleForm').modal('hide');
+                    layer.msg('操作成功', function() {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if ($('#changeRoleForm').applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+        });
+    </script>
+{% endblock %}

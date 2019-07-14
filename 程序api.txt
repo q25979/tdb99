@@ -1,0 +1,46 @@
+短信平台 www.yunpian.com
+数据库   阿里云rds 5.7
+oss      阿里云
+后台登陆 admin 111111
+	 szg   111111
+
+阿里云
+账号：q384443233
+密码：aa123456
+
+服务器
+远程连接：202564
+ip: 47.244.23.221
+user: root
+pass: @Aa123123
+MAC连接：ssh -l root 47.244.23.221
+测试：ssh -l root 47.111.94.99
+
+数据库
+主机：rm-bp111a14j448rfky7wo.mysql.rds.aliyuncs.com
+账号：tdb99
+密码：Aa123123
+
+解析前缀
+域名：tdb99.com
+api
+web
+code
+app
+download
+console
+
+================================
+api.tdb99.com
+console.tdb99.com	后台
+  admin 111111
+www.tdb99.com		前端
+================================
+
+
+
+
+
+
+
+

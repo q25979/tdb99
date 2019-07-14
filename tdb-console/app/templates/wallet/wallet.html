@@ -1,0 +1,127 @@
+{% extends 'layout/main.html' %}
+{% set title = '钱包记录' %}
+
+{% block content %}
+
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>会员手机：</label>
+                    {{ filter_form.mobile(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>钱包：</label>
+                    {{ filter_form.assets_type(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>来源：</label>
+                    {{ filter_form.record_type(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>变化量：</label>
+                    {{ filter_form.amount_type(class='form-control') }}
+                </div>
+                <div class="search-item-date">
+                    <label>时间：</label>
+                    <div class="has-feedback">
+                        {{ filter_form.created_begin_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <span class="date-line">-</span>
+                    <div class="has-feedback">
+                        {{ filter_form.created_end_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+                {#                <div class="search-item search-tabtn">#}
+                {#                    <button id="download" class="btn btn-warning">导出Excel</button>#}
+                {#                </div>#}
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">创建时间</th>
+                    <th class="text-center">用户编号</th>
+                    <th class="text-center">用户姓名</th>
+                    <th class="text-center">用户手机</th>
+                    <th class="text-center">钱包</th>
+                    <th class="text-center">变化后余额</th>
+                    <th class="text-center">变化量</th>
+                    <th class="text-center">来源</th>
+
+                    <th class="text-center" width="20%">详情信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <!-- build:js /static/components/bootstrap-datepicker.min.js -->
+    <script src="/static/components/quantum/js/bootstrap-datepicker.js"></script>
+    <script src="/static/components/quantum/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <!-- endbuild -->
+    <script>
+        $('#created_begin_timestamp,#created_end_timestamp').datepicker({
+            language: 'zh-CN'
+        });
+        $("#download").on('click', function () {
+
+            window.open("{{ url_for('wallet.record_download') }}?" +
+                'uid=' + $('#uid').val() +
+                '&wallet_type=' + $('#wallet_type').val() +
+                '&type=' + $('#type').val() +
+                '&created_begin_timestamp=' + $('#created_begin_timestamp').val() +
+                '&created_end_timestamp=' + $('#created_end_timestamp').val());
+        });
+        $(function () {
+
+            var walletTypeFlag = {{ WALLET_TYPE_FLAG | tojson }};
+            var typeFlag = {{ TYPE_FLAG | tojson }};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('created_at', defaultRowOptions),
+                    dtUtils.columns.text('user.uid', defaultRowOptions),
+                    dtUtils.columns.text('user.name', defaultRowOptions),
+                    dtUtils.columns.text('user.mobile', defaultRowOptions),
+                    dtUtils.columns.dict('assets_type', walletTypeFlag, defaultRowOptions),
+                    dtUtils.columns.currency('current_amount', defaultRowOptions),
+                    dtUtils.columns.currency('delta_amount', defaultRowOptions),
+                    dtUtils.columns.dict('record_type', typeFlag, defaultRowOptions),
+
+                    dtUtils.columns.text('details.message', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('wallet.ajax_list') }}', filterForm)
+            }));
+
+            filterForm.submit(function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

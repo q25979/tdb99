@@ -1,0 +1,210 @@
+{% extends 'layout/main.html' %}
+{% set title = '钱包记录' %}
+
+{% block content %}
+
+
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>状态：</label>
+                    {{ filter_form.status(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>币种：</label>
+                    {{ filter_form.currency_code(class='form-control') }}
+                </div>
+                <div class="search-item-date">
+                    <label>时间：</label>
+                    <div class="has-feedback">
+                        {{ filter_form.created_begin_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <span class="date-line">-</span>
+                    <div class="has-feedback">
+                        {{ filter_form.created_end_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+{#                <div class="search-item search-tabtn">#}
+{#                    <button id="download" class="btn btn-warning">导出Excel</button>#}
+{#                </div>#}
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">时间</th>
+                    <th class="text-center">用户手机</th>
+                    <th class="text-center">用户昵称</th>
+                    <th class="text-center">币种</th>
+                    <th class="text-center">提现数量</th>
+                    <th class="text-center">手续费</th>
+                    <th class="text-center">提现地址</th>
+                    <th class="text-center">交易哈希</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center" style="width: 120px">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <script id="operation-template" type="text/template">
+            {% raw %}
+            {{if row.status == 1}}
+            <a data-number="${data}" class="label btn-danger confirm-btn">
+                确认
+            </a>
+            <a data-number="${data}" class="label btn-warning cancel-btn" style="margin-left: 10px">
+                驳回
+            </a>
+            {{/if}}
+            {% endraw %}
+        </script>
+    </div>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <!-- build:js /static/components/bootstrap-datepicker.min.js -->
+    <script src="/static/components/quantum/js/bootstrap-datepicker.js"></script>
+    <script src="/static/components/quantum/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <!-- endbuild -->
+    <script>
+        $('#created_begin_timestamp,#created_end_timestamp').datepicker({
+            language: 'zh-CN'
+        });
+
+        $("#download").on('click', function () {
+
+            window.open("{{ url_for('wallet.withdraw_download') }}?" +
+                'status=' + $('#status').val() +
+                '&created_begin_timestamp=' + $('#created_begin_timestamp').val() +
+                '&created_end_timestamp=' + $('#created_end_timestamp').val());
+        });
+        $(function () {
+
+            var statusFlag = {{ STATUS_FLAG | tojson }};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('created_timestamp', defaultRowOptions),
+                    dtUtils.columns.text('user.mobile', defaultRowOptions),
+                    dtUtils.columns.text('user.name', defaultRowOptions),
+                    dtUtils.columns.text('currency_code', defaultRowOptions),
+                    dtUtils.columns.float('amount', defaultRowOptions),
+                    dtUtils.columns.float('fee', defaultRowOptions),
+                    dtUtils.columns.text('address', defaultRowOptions),
+                    dtUtils.columns.text('txid', defaultRowOptions),
+                    dtUtils.columns.dict('status', statusFlag, defaultRowOptions),
+                    dtUtils.columns.tmpl('number', '#operation-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('wallet.ajax_withdraw_list') }}', filterForm)
+            }));
+
+            filterForm.submit(function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+                return false;
+            });
+
+            {#            $table.on('click', '.wait-btn', function () {#}
+            {#                var $this = $(this);#}
+            {#                layer.confirm('确定要该提现吗？', {#}
+            {#                    btn: ['确认', '取消']#}
+            {#                    , btn2: function (index, layero) {#}
+            {#                    }#}
+            {#                }, function (index) {#}
+            {#                    var loadingIndex = layer.load();#}
+            {#                    $.ajax({#}
+            {#                        type: 'POST',#}
+            {#                        contentType: 'application/json',#}
+            {#                        data: JSON.stringify({id: $this.data('id'), status: 2}),#}
+            {#                        url: '{{ url_for('wallet.ajax_withdraw_confirm') }}',#}
+            {#                        success: function () {#}
+            {#                            layer.msg('操作成功');#}
+            {#                            table.ajax.reload();#}
+            {#                        },#}
+            {#                        error: function () {#}
+            {#                            layer.msg('操作失败');#}
+            {#                            window.location.reload();#}
+            {#                        }#}
+            {#                    }).always(function () {#}
+            {#                        layer.close(loadingIndex);#}
+            {#                    });#}
+            {#                });#}
+            {#            });#}
+
+            $table.on('click', '.confirm-btn', function () {
+                var $this = $(this);
+                layer.confirm('确定已完成这笔提现吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({number: $this.data('number'), status: 4}),
+                        url: '{{ url_for('wallet.ajax_withdraw_confirm') }}',
+                        success: function () {
+                            layer.msg('操作成功');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+
+            $table.on('click', '.cancel-btn', function () {
+                var $this = $(this);
+                layer.confirm('确定驳回这笔提现吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({number: $this.data('number'), status: 8}),
+                        url: '{{ url_for('wallet.ajax_withdraw_cancel') }}',
+                        success: function () {
+                            layer.msg('操作成功');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'layout/main.html' %}
+{% set title = '商品列表' %}
+
+{% block content %}
+
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>商品名</label>
+                    {{ filter_form.name(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>状态</label>
+                    {{ filter_form.status(class='form-control') }}
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">创建时间</th>
+                    <th class="text-center">缩略图</th>
+                    <th class="text-center">商品名</th>
+                    <th class="text-center">排序</th>
+                    <th class="text-center">价格</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script id="operation-template" type="text/template">
+        <a class="label btn-primary" href="{{ url_for('mall.details',product_id='') }}${data}">查看详情</a>
+    </script>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            var status = {1: '待发布', 2: '上架', 4: '下架', 8: '回收站'};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('created_timestamp', defaultRowOptions),
+                    dtUtils.columns.image('front_cover', 'thumb', defaultRowOptions),
+                    dtUtils.columns.text('name', defaultRowOptions),
+                    dtUtils.columns.text('sequence', defaultRowOptions),
+                    dtUtils.columns.float('price', defaultRowOptions),
+                    dtUtils.columns.dict('status', status, defaultRowOptions),
+                    dtUtils.columns.tmpl('id', '#operation-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('mall.ajax_list') }}', filterForm)
+            }));
+
+            filterForm.submit(function () {
+                table.ajax.reload();
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

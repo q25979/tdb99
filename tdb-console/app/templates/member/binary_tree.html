@@ -1,0 +1,79 @@
+{% extends 'layout/main.html' %}
+{% set title = '双规网络图' %}
+
+{% block head %}
+    <!-- build:css /static/components/binaryTree..min.css -->
+    <link rel="stylesheet" href="/static/assets/css/jquery.contextMenu.css">
+    <link rel="stylesheet" href="/static/assets/css/binary.tree.css">
+    <!-- endbuild -->
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div class="panel bg-no">
+        <div class="panel-body clearfix">
+            <div class="search-item">
+                <label>用户名</label>
+                <input type="text" placeholder="请输入用户名" id="user_id" class="form-control">
+            </div>
+            <div class="search-item search-tabtn">
+                <button type="button" id="search" class="btn btn-primary btn-flat">查询</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="panel">
+        <div class="panel-body">
+            <div class="tree" id="tree">
+                <div class="wrap">
+                    <div class="struct"></div>
+                </div>
+                <!--<div class="search">-->
+                <!--<div class="form-group clearfix">-->
+                <!--<input type="text" class="form-control ipt" value="right-1" name="username">-->
+                <!--<input type="button" class="btn btn-primary" value="搜索">-->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block script %}
+    <!-- build:js /static/components/binaryTree.min.js -->
+    <script src="/static/assets/data/mockData.js"></script>
+    <script src="/static/assets/js/jquery.ui.position.js"></script>
+    <script src="/static/assets/js/jquery.contextMenu.js"></script>
+    <script src="/static/assets/js/binaryTree/binary.tree.js"></script>
+    <!-- endbuild -->
+    <script type="text/javascript">
+        $(function () {
+            binaryTree(2, {
+                id: '#tree',
+                url: '{{ url_for("member.ajax_placement_downline") }}',
+                addUrl: '{{ url_for('member.index') }}',
+                unique_id: '{{ 'root' if not request.args.get('user_id') else request.args.get('user_id') }}',
+                toolTip: function (data) {
+                    var html = '<ul class="list">';
+                    html += '<li><span>编号：</span><em>' + data.uid + '</em></li>';
+                    html += '<li><span>昵称：</span><em>' + data.nickname + '</em></li>';
+                    html += '<li><span>注册时间：</span><em>' + data.created_at + '</em></li>';
+                    html += '<li><span>左区业绩：</span><em>' + data.team_a_investment + '</em></li>';
+                    html += '<li><span>右区业绩：</span><em>' + data.team_b_investment + '</em></li>';
+                    html += '</ul>';
+                    return html;
+                },
+                ajaxErrorCallback: function (err) {
+                    console.error(err);
+                },
+                searchBtn: $('#search'),
+                searchInput: $('#user_id')
+            });
+        });
+    </script>
+
+{% endblock %}

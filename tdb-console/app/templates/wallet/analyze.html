@@ -1,0 +1,175 @@
+{% extends 'layout/main.html' %}
+{% set title = '财务统计' %}
+
+{% block content %}
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item-date">
+                    <label>时间：</label>
+                    <div class="has-feedback">
+                        {{ filter_form.created_begin_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <span class="date-line">-</span>
+                    <div class="has-feedback">
+                        {{ filter_form.created_end_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+                <a class="btn btn-warning" id="analyze">数据统计</a>
+            </div>
+        </form>
+    </div>
+    <div id="addSystemAdmin">
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        统计
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <section class="panel">
+                                    <div class="panel-body">
+                                        <div class="form-horizontal text-center">
+                                            <div class="form-group">
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">系统充值</label>
+                                                    <div class="font-14">{{ data.recharge | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">系统扣减</label>
+                                                    <div class="font-14">{{ data.deduction | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">静态收益</label>
+                                                    <div class="font-14">{{ data.static_profit | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">动态收益</label>
+                                                    <div class="font-14">{{ data.dynamic_profit | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">节点收益</label>
+                                                    <div class="font-14">{{ data.node_profit | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">冻结释放</label>
+                                                    <div class="font-14">{{ data.free_coin | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">转账</label>
+                                                    <div class="font-14">{{ data.transfer | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">提币</label>
+                                                    <div class="font-14">{{ data.withdraw | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">区块充值</label>
+                                                    <div class="font-14">{{ data.block_recharge | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">购买商品</label>
+                                                    <div class="font-14">{{ data.buy_product | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">复投</label>
+                                                    <div class="font-14">{{ data.reinvestment | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">交易(买单)</label>
+                                                    <div class="font-14">{{ data.buy_order | currency }}</div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <label class="control-label font-16">交易(卖单)</label>
+                                                    <div class="font-14">{{ data.sell_order | currency }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">时间</th>
+                    <th class="text-center">系统充值</th>
+                    <th class="text-center">系统扣减</th>
+                    <th class="text-center">静态收益</th>
+                    <th class="text-center">动态收益</th>
+                    <th class="text-center">节点收益</th>
+                    <th class="text-center">冻结释放</th>
+                    <th class="text-center">转账</th>
+                    <th class="text-center">提币</th>
+                    <th class="text-center">区块充值</th>
+                    <th class="text-center">购买商品</th>
+                    <th class="text-center">复投</th>
+                    <th class="text-center">交易(买单)</th>
+                    <th class="text-center">交易(卖单)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in day_data %}
+                    <tr>
+                        <th class="text-center">{{ item[0] }}</th>
+                        <th class="text-center">{{ item[1] | currency }}</th>
+                        <th class="text-center">{{ item[2] | currency }}</th>
+                        <th class="text-center">{{ item[3] | currency }}</th>
+                        <th class="text-center">{{ item[4] | currency }}</th>
+                        <th class="text-center">{{ item[5] | currency }}</th>
+                        <th class="text-center">{{ item[6] | currency }}</th>
+                        <th class="text-center">{{ item[7] | currency }}</th>
+                        <th class="text-center">{{ item[8] | currency }}</th>
+                        <th class="text-center">{{ item[9] | currency }}</th>
+                        <th class="text-center">{{ item[10] | currency }}</th>
+                        <th class="text-center">{{ item[11] | currency }}</th>
+                        <th class="text-center">{{ item[12] | currency }}</th>
+                        <th class="text-center">{{ item[13] | currency }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <!-- build:js /static/components/bootstrap-datepicker.min.js -->
+    <script src="/static/components/quantum/js/bootstrap-datepicker.js"></script>
+    <script src="/static/components/quantum/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <!-- endbuild -->
+    <script>
+        $('#created_begin_timestamp,#created_end_timestamp').datepicker({
+            language: 'zh-CN'
+        });
+        $("#admin-table").DataTable(dtUtils.config({"order": [[0, "desc"]]}));
+
+        $(function () {
+            $("#analyze").on('click', function () {
+                window.open("{{ url_for('analyze.download') }}?" +
+                        'created_begin_timestamp=' + $('#created_begin_timestamp').val() +
+                        '&created_end_timestamp=' + $('#created_end_timestamp').val());
+            });
+
+        });
+    </script>
+{% endblock %}

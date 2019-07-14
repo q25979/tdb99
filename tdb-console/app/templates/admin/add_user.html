@@ -1,0 +1,91 @@
+{% extends 'layout/main.html' %}
+
+{% if add_user_form.id.data %}
+    {% set title = '编辑管理员' %}
+{% else %}
+    {% set title = '添加管理员' %}
+{% endif %}
+
+{% block content %}
+    <section class="panel">
+        <div class="row">
+            <div class="panel-body pl60 col-lg-8">
+                <div class="tab-base member-box">
+                    <form role="form" class="form-horizontal" action="{{ url_for('admin.ajax_add_user') }}"
+                          method="post"
+                          id="addUserForm">
+                        {{ add_user_form.hidden_tag() }}
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">管理员用户名</label>
+                            {% if not add_user_form.id.data %}
+                                <div class="col-lg-7">
+                                    {{ add_user_form.uid(class='form-control', placeholder='请输入用户名') }}
+                                </div>
+                            {% else %}
+                                <div class="none">
+                                    {{ add_user_form.uid(class='form-control', placeholder='请输入用户名') }}
+                                </div>
+                                <span style="position:  relative;top: 10px;left: 15px;">
+                                    {{ add_user_form.uid.data }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">密码</label>
+                            <div class="col-lg-7">
+                                {{ add_user_form.password(class='form-control', placeholder='请输入密码') }}
+                            </div>
+                        </div>
+                        {% if not add_user_form.id.data %}
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">确认密码</label>
+                                <div class="col-lg-7">
+                                    {{ add_user_form.confirm_password(class='form-control', placeholder='请输入密码') }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">权限</label>
+                            <div class="col-lg-7">
+                                {{ add_user_form.permission(class='tag-list') }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit" id="">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#addUserForm').submit(function (e) {
+            e.preventDefault();
+            var index = layer.load();
+            $('#addUserForm').resetFieldErrors().ajaxSubmit(function () {
+                $('#addUserForm').modal('hide');
+                layer.msg('操作成功', function () {
+                    window.location.replace("{{ url_for('admin.index') }}")
+                });
+            }).error(function (xhr) {
+                if ($('#addUserForm').applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                    layer.msg('信息填写错误');
+                } else if (xhr.responseJSON.code == 1006) {
+                    layer.msg('用户名已存在', function () {
+                        location.reload();
+                    });
+                }
+            }).always(function () {
+                layer.close(index);
+            });
+        });
+    </script>
+{% endblock %}

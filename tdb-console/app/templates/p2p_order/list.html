@@ -1,0 +1,194 @@
+{% extends 'layout/main.html' %}
+{% set title = '订单列表' %}
+
+{% block content %}
+
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                {#                <div class="search-item">#}
+                {#                    <label>类型</label>#}
+                {#                    {{ filter_form.side(class='form-control') }}#}
+                {#                </div>#}
+                <div class="search-item">
+                    <label>卖单号</label>
+                    {{ filter_form.number(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>买单号</label>
+                    {{ filter_form.buy_number(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>卖手机号</label>
+                    {{ filter_form.mobile(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>买手机号</label>
+                    {{ filter_form.buy_mobile(class='form-control') }}
+                </div>
+                <div class="search-item none">
+                    <label>状态</label>
+                    {{ filter_form.status(class='form-control') }}
+                </div>
+                <div class="search-item-date">
+                    <label>时间：</label>
+                    <div class="has-feedback">
+                        {{ filter_form.created_begin_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <span class="date-line">-</span>
+                    <div class="has-feedback">
+                        {{ filter_form.created_end_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+                {#                <div class="search-item search-tabtn">#}
+                {#                    <button id="download" class="btn btn-warning">导出Excel</button>#}
+                {#                </div>#}
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="javascript:;" data-status="2">匹配中</a></li>
+            <li><a href="javascript:;" data-status="4">已付款</a></li>
+            <li><a href="javascript:;" data-status="8">已确认</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="panel panel-default">
+                <div>
+                    <table class="table table-striped data-table font-12" id="admin-table">
+                        <thead>
+                        <tr>
+                            <th class="text-center">匹配时间</th>
+                            <th class="text-center">更新时间</th>
+                            <th class="text-center">卖单号</th>
+                            <th class="text-center">买单号</th>
+                            <th class="text-center">卖用户</th>
+                            <th class="text-center">买用户</th>
+                            <th class="text-center">卖手机号</th>
+                            <th class="text-center">买手机号</th>
+                            <th class="text-center">数量</th>
+                            <th class="text-center">单价</th>
+                            <th class="text-center">总价</th>
+                            <th class="text-center">状态</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="operation-template" type="text/template">
+        <a class="label btn-primary" target="_Blank" href="{{ url_for('p2p_order.details',id='') }}${data}">查看详情</a>
+        {% raw %}
+        {{if row.status == '1' || row.status == '2' || row.status == '4'}}
+        <a data-number="${data}" data-status="16" class="label btn-danger change-btn">
+            取消订单
+        </a>
+        &nbsp
+        {{/if}}
+        {{if row.status == '4'}}
+        <a data-number="${data}" data-status="8" class="label btn-danger change-btn">
+            确认订单
+        </a>
+        {{/if}}
+        {% endraw %}
+    </script>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <!-- build:js /static/components/bootstrap-datepicker.min.js -->
+    <script src="/static/components/quantum/js/bootstrap-datepicker.js"></script>
+    <script src="/static/components/quantum/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <!-- endbuild -->
+    <script>
+        $(function () {
+            var tabs = $('.nav-tabs');
+            var status = {1: '挂单中', 2: '匹配中', 4: '已付款', 8: '已确认', 16: '已取消'};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+
+            var $table = $('#admin-table');
+            $('#created_begin_timestamp,#created_end_timestamp').datepicker({
+                language: 'zh-CN'
+            });
+
+
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.date('match_order.created_timestamp', defaultRowOptions),
+                    dtUtils.columns.date('match_order.updated_timestamp', defaultRowOptions),
+                    dtUtils.columns.text('number', defaultRowOptions),
+                    dtUtils.columns.text('match_order.buy_number', defaultRowOptions),
+                    dtUtils.columns.text('user.name', defaultRowOptions),
+                    dtUtils.columns.text('match_order.buy_user.name', defaultRowOptions),
+                    dtUtils.columns.text('user.mobile', defaultRowOptions),
+                    dtUtils.columns.text('match_order.buy_user.mobile', defaultRowOptions),
+                    dtUtils.columns.float('amount', defaultRowOptions),
+                    dtUtils.columns.float('match_order.current_price', defaultRowOptions),
+                    dtUtils.columns.float('match_order.payment_amount', defaultRowOptions),
+                    dtUtils.columns.dict('status', status, defaultRowOptions),
+                    dtUtils.columns.tmpl('number', '#operation-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('p2p_order.ajax_match_list') }}', filterForm)
+            }));
+
+            tabs.on('click', 'li a', function () {
+                tabs.find('li').removeClass('active');
+                $(this).parent().addClass('active');
+                $('#status').val($(this).data('status'));
+                table.ajax.reload();
+            });
+
+            filterForm.submit(function () {
+                table.ajax.reload();
+                return false;
+            });
+
+            $table.on('click', '.change-btn', function () {
+                var text = $(this).text();
+                var $this = $(this);
+                var targetStatus = $(this).data('status');
+                layer.confirm(text + '?', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({number: $this.data('number'), status: targetStatus}),
+                        url: '{{ url_for('p2p_order.ajax_modify_order') }}',
+                        success: function () {
+                            layer.msg(text + '成功！');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+        })
+        ;
+    </script>
+{% endblock %}

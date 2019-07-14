@@ -1,0 +1,306 @@
+{% extends 'layout/main.html' %}
+{% set title = '会员列表' %}
+
+{% block content %}
+    <div class="panel bg-no">
+        <form id="filter-form">
+            <div class="panel-body clearfix">
+                <div class="search-item">
+                    <label>手机号</label>
+                    {{ filter_form.mobile(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>姓名</label>
+                    {{ filter_form.name(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>推荐人手机</label>
+                    {{ filter_form.sponsor(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>状态</label>
+                    {{ filter_form.state(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>锁定</label>
+                    {{ filter_form.locked(class='form-control') }}
+                </div>
+                <div class="search-item">
+                    <label>会员级别</label>
+                    {{ filter_form.is_community_node(class='form-control') }}
+                </div>
+                <div class="search-item-date">
+                    <label>时间：</label>
+                    <div class="has-feedback">
+                        {{ filter_form.created_begin_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    <span class="date-line">-</span>
+                    <div class="has-feedback">
+                        {{ filter_form.created_end_timestamp(class_='form-control font-12') }}
+                        <span class="icon-calendar h4 no-m form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="search-item search-tabtn">
+                    <button type="submit" class="btn btn-primary btn-flat">查询</button>
+                </div>
+                {#                <div class="search-item search-tabtn">#}
+                {#                    <button id="download" class="btn btn-warning">导出Excel</button>#}
+                {#                </div>#}
+            </div>
+        </form>
+    </div>
+    <div class="panel panel-default">
+        <div>
+            <table class="table table-striped data-table font-12" id="admin-table">
+                <thead>
+                <tr>
+                    {#                    <th><span class="row-select-checkbox"></span></th>#}
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">手机号</th>
+                    <th class="text-center">微信号</th>
+                    <th class="text-center">用户ID</th>
+                    <th class="text-center">会员级别</th>
+                    <th class="text-center">推荐手机</th>
+                    <th class="text-center">推荐姓名</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">锁定</th>
+                    <th class="text-center">注册时间</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script id="operation-template" type="text/template">
+        <a class="label btn-primary" href="{{ url_for('member.details',member_id='') }}${data}">查看详情</a>
+        {% raw %}
+        {{if row.locked}}
+        <a data-id="${data}" data-lock="${row.locked}" class="label btn-default change-lock">
+            解锁
+        </a>
+        {{else}}
+        <a data-id="${data}" data-lock="${row.locked}" class="label btn-danger change-lock">
+            锁定
+        </a>
+        {{/if}}
+        &nbsp
+        {{if row.transaction_level}}
+        <a data-id="${data}" data-transaction_level="${row.transaction_level}"
+           class="label btn-warning change-transaction">
+            取消系统挂卖
+        </a>
+        {{else}}
+        <a data-id="${data}" data-transaction_level="${row.transaction_level}"
+           class="label btn-danger change-transaction">
+            系统挂卖
+        </a>
+        {{/if}}
+        &nbsp
+        <a data-id="${data}" class="label btn-danger change-delete">
+            删除
+        </a>
+        {% endraw %}
+    </script>
+
+    <!-- /.table-responsive -->
+{% endblock %}
+
+{% block script %}
+    <!-- build:js /static/components/bootstrap-datepicker.min.js -->
+    <script src="/static/components/quantum/js/bootstrap-datepicker.js"></script>
+    <script src="/static/components/quantum/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <!-- endbuild -->
+    <script>
+        $(function () {
+            $('#created_begin_timestamp,#created_end_timestamp').datepicker({
+                language: 'zh-CN'
+            });
+            var stateTypeFlag = {{ STATE_TYPE_FLAG | tojson }};
+            var memberLevel = {{ MEMBER_LEVEL | tojson }};
+            $("#download").on('click', function () {
+
+                window.open("{{ url_for('member.data_download') }}?" +
+                    'mobile=' + $('#mobile').val() +
+                    '&uid=' + $('#uid').val() +
+                    '&sponsor=' + $('#sponsor').val() +
+                    '&locked=' + $('#locked').val() +
+                    '&created_begin_timestamp=' + $('#created_begin_timestamp').val() +
+                    '&created_end_timestamp=' + $('#created_end_timestamp').val());
+            });
+            var lockStatus = {1: '锁定', 0: '未锁定'};
+            var filterForm = $('#filter-form');
+            var defaultRowOptions = {className: 'v-middle text-center'};
+            var $table = $('#admin-table');
+            window.table = $table.DataTable(dtUtils.config({
+                select: {
+                    style: 'os',
+                    selector: '.row-select-checkbox'
+                },
+                columns: [
+                    dtUtils.columns.text('name', defaultRowOptions),
+                    dtUtils.columns.text('mobile', defaultRowOptions),
+                    dtUtils.columns.text('wechat', defaultRowOptions),
+                    dtUtils.columns.text('uid', defaultRowOptions),
+                    dtUtils.columns.dict('is_community_node', memberLevel, defaultRowOptions),
+                    dtUtils.columns.text('sponsor.mobile', defaultRowOptions),
+                    dtUtils.columns.text('sponsor.name', defaultRowOptions),
+
+                    dtUtils.columns.dict('state', stateTypeFlag, defaultRowOptions),
+                    dtUtils.columns.dict('locked', lockStatus, defaultRowOptions),
+                    dtUtils.columns.date('created_timestamp', defaultRowOptions),
+                    dtUtils.columns.tmpl('id', '#operation-template', defaultRowOptions)
+                ],
+                serverSide: true,
+                ajax: dtUtils.dataLoader('{{ url_for('member.ajax_list') }}', filterForm)
+            }));
+            filterForm.submit(function (e) {
+                e.preventDefault();
+                table.ajax.reload();
+                return false;
+            });
+
+            $table.on('click', '.change-lock', function () {
+                var text = $(this).text();
+                var $this = $(this);
+                var targetLocked = $(this).data('lock') ? 0 : 1;
+                layer.confirm('确认要' + text + '这个会员吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id'), locked: targetLocked}),
+                        url: '{{ url_for('member.ajax_lock') }}',
+                        success: function () {
+                            layer.msg(text + '成功！');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+            $table.on('click', '.change-delete', function () {
+                var text = $(this).text();
+                var $this = $(this);
+                layer.confirm('确认要' + text + '这个会员吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id'), locked: 2}),
+                        url: '{{ url_for('member.ajax_lock') }}',
+                        success: function () {
+                            layer.msg(text + '成功！');
+                            table.ajax.reload();
+                        },
+                        error: function (xhr) {
+                            if (xhr.responseJSON.message.sponsor_id) {
+                                layer.msg('该会员已经注册下线');
+                            } else {
+                                layer.msg('该会员已经产生业绩');
+                            }
+
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+
+            $table.on('click', '.change-transaction', function () {
+                var text = $(this).text();
+                var $this = $(this);
+                var transaction_level = $(this).data('transaction_level') ? 0 : 2;
+                layer.confirm('确认要' + text + '吗？', {
+                    btn: ['确认', '取消']
+                    , btn2: function (index, layero) {
+                    }
+                }, function (index) {
+                    var loadingIndex = layer.load();
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id: $this.data('id'), transaction_level: transaction_level}),
+                        url: '{{ url_for('member.ajax_lock') }}',
+                        success: function () {
+                            layer.msg(text + '成功！');
+                            table.ajax.reload();
+                        },
+                        error: function () {
+                            layer.msg('操作失败');
+                        }
+                    }).always(function () {
+                        layer.close(loadingIndex);
+                    });
+                });
+            });
+
+            $table.on('click', '.change-password', function () {
+                $('#id').val($(this).data('id'));
+                $('.admin-uid').text($(this).data('uid'));
+                $('#password').val('');
+                $('#changePasswordModal').modal('show');
+            });
+
+            $table.on('click', '.change-role', function () {
+                $('#user_id').val($(this).data('id'));
+                $('.admin-uid').text($(this).data('uid'));
+                $('#role').val($(this).data('role'));
+                $('#changeRoleModal').modal('show');
+            });
+
+            $('#changePasswordForm').submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                $('#changePasswordForm').resetFieldErrors().ajaxSubmit(function () {
+                    $('#changePasswordForm').modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if ($('#changePasswordForm').applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+
+            $('#changeRoleForm').submit(function (e) {
+                e.preventDefault();
+                var index = layer.load();
+                $('#changeRoleForm').resetFieldErrors().ajaxSubmit(function () {
+                    $('#changeRoleForm').modal('hide');
+                    layer.msg('操作成功', function () {
+                        location.reload();
+                    });
+                }).error(function (xhr) {
+                    if ($('#changeRoleForm').applyFieldErrors(xhr, {
+                            handler: 'popover-and-highlight'
+                        })) {
+                        layer.msg('信息填写错误');
+                    }
+                }).always(function () {
+                    layer.close(index);
+                });
+            });
+        });
+    </script>
+{% endblock %}
