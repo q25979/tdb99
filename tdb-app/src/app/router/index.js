@@ -58,27 +58,27 @@ router.beforeEach((to, from, next) => {
           switch(VueCookie.get('hl')) {
           case 'en':
             title = 'Questionnaire evaluation';
-            content = 'LEBO will receive a free value of two hundred dollars through the evaluation.';
+            content = 'TDB will receive a free value of two hundred dollars through the evaluation.';
             startTxt = 'Start';
             break;
           case 'ms':
             title = 'Penilaian soal selidik';
-            content = 'LEBO akan menerima nilai percuma dua ratus dolar melalui penilaian.';
+            content = 'TDB akan menerima nilai percuma dua ratus dolar melalui penilaian.';
             startTxt = 'Mulakan';
             break;
           case 'vi':
             title = 'Đánh giá câu hỏi';
-            content = 'LEBO sẽ nhận được giá trị miễn phí hai trăm đô la thông qua đánh giá.';
+            content = 'TDB sẽ nhận được giá trị miễn phí hai trăm đô la thông qua đánh giá.';
             startTxt = 'Bắt đầu';
             break;
           case 'th':
             title = 'การประเมินผลแบบสอบถาม';
-            content = 'LEBO จะได้รับมูลค่าฟรีสองร้อยดอลลาร์ผ่านการประเมินผล';
+            content = 'TDB จะได้รับมูลค่าฟรีสองร้อยดอลลาร์ผ่านการประเมินผล';
             startTxt = 'เริ่มต้น';
             break;
           case 'kh':
             title = 'ការវាយតម្លៃកម្រងសំណួរ';
-            content = 'LEBO នឹងទទួលបានតម្លៃឥតគិតថ្លៃពីររយដុល្លារតាមរយៈការវាយតម្លៃ។';
+            content = 'TDB នឹងទទួលបានតម្លៃឥតគិតថ្លៃពីររយដុល្លារតាមរយៈការវាយតម្លៃ។';
             startTxt = 'ចាប់ផ្តើម';
             break;
           default:

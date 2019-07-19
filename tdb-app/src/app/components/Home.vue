@@ -7,7 +7,9 @@
       {{$t('common.login')}}
     </mt-button>
     <div class="tips">
-      {{$t('common.app_tips')}} <span>《{{$t('common.protol')}}》</span>
+      {{$t('common.app_tips')}}
+      <br />
+      <span>《{{$t('common.protol')}}》</span>
     </div>
   </div>
 </template>
@@ -40,23 +42,26 @@ export default {
         color: #F2D479;
       }
       &.signin-btn {
-        box-shadow: 0 2px 10px 3px rgba(43,57,166,0.30);
+        box-shadow: 1px 2px 5px 1px rgba(242,201,97,0.5);
         font-family: PingFangSC-Medium;
         font-size: 36px;
         color: #FFFFFF;
-        width: calc(100% - 96px);
-        left: 48px;
-        bottom: 232px;
+        width: calc(100% - 240px);
+        left: 120px;
+        bottom: 202px;
         height: 96px;
+        border-radius: 96px;
+        background: #D8AE68 !important;
       }
     }
     .tips {
       position: absolute;
       font-size: 26px;
-      color: rgba(255,255,255,0.70);
+      text-align: center;
+      color: #8B8EA0;
       line-height: 36px;
       span {
-        color: #F2D479;
+        color: #0078F0;
       }
       bottom: 111px;
       left: 48px;

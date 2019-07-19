@@ -34,7 +34,7 @@ export default {
     },
     containerColor: {
       type: String,
-      default: '#EDEFF3',
+      default: '#fff',
     },
     noHeader: {
       type:Boolean,

@@ -5,7 +5,9 @@
         <div class="user-icon">
           <img :src="memberProfile.avatar || defaultImage" alt="">
         </div>
-        <p class="user-uid">UID: {{memberProfile.uid}}</p>
+        <p class="user-uid">
+          <span>UID: {{memberProfile.uid}}</span>
+        </p>
       </div>
       <div class="content-box">
         <div class="total-assets-box">
@@ -13,10 +15,9 @@
             <div class="assets-count" @click="$router.push('/finance/generalasset')">
               <div class="count-left">
                 <p class="count-title">
-                  <img src="../../assets/img/icon/home_2x.png" alt="">
                   {{$t('common.total_asset_wallet')}}
                 </p>
-                <p class="count">{{assetData.total_balance}}</p>
+                <p class="count">{{parseFloat(assetData.total_balance).toFixed(2)}}</p>
               </div>
               <div class="count-right">
                 <img src="../../assets/img/icon/home_icon_142x.png" alt="">
@@ -24,42 +25,51 @@
             </div>
             <div class="count-bottom">
               <div class="bottom-item">
-                <p class="title">{{$t('common.super_vip')}}</p>
-                <p class="number">0</p>
+                <p class="number">0.00</p>
+                <p class="title"><span class="icon vip"></span>{{$t('common.super_vip')}}</p>
               </div>
               <div class="bottom-item" @click="$router.push('/finance/node_profit')">
-                 <p class="title">{{$t('common.node_profit')}}</p>
-                <p class="number">{{memberProfile.node_profit}}</p>
+                <p class="number">{{parseFloat(memberProfile.node_profit).toFixed(2)}}</p>
+                <p class="title"><span class="icon icon-profit"></span>{{$t('common.node_profit')}}</p>
               </div>
             </div>
           </div>
+
           <swiper :options='swiperOption' class="notice-swiper" ref="myswiper" v-if="noticeList.length > 0">
             <swiper-slide v-for="(item,index) in noticeList" :key="index">
-              <div class="notice" @click="$router.push('/account/news_detail?id='+item.id)"><img src="../../assets/img/icon/notice.png" alt="">
-                <span>公告：{{handleDetails(item.details)}}</span>
+              <div class="notice" @click="$router.push('/account/news_detail?id='+item.id)"><img src="../../assets/img/icon/gonggao.png" alt="">
+                <span class="notice-title">公告</span>
+                <span>{{handleDetails(item.details)}}</span>
               </div>
             </swiper-slide>
           </swiper>
-            
-            <div class="wallet-box">
-              <div class="wallet-item" @click="$router.push('/finance/communitywallet')">
-                <p class="count-title">
-                  <img src="../../assets/img/icon/home_2x.png" alt="">
-                  {{$t('common.community_wallet')}}
-                </p>
-                <p class="count">{{assetData.total_community | currency(8)}}</p>
-              </div>
-              <div class="wallet-item" @click="$router.push('/finance/exchangeasset')">
-                <p class="count-title">
-                  <img src="../../assets/img/icon/home_2x.png" alt="">
-                  {{$t('common.exchange_wallet')}}
-                </p>
-                <p class="count">{{assetData.transaction_balance}}</p>
-              </div>
+          <div class="wallet-box">
+            <div class="wallet-item" @click="$router.push('/finance/communitywallet')">
+              <p class="count-title">
+                {{$t('common.community_wallet')}}
+              </p>
+              <p class="count">{{assetData.total_community | currency(2)}}</p>
             </div>
+            <div class="wallet-item" @click="$router.push('/finance/exchangeasset')">
+              <p class="count-title">
+                {{$t('common.exchange_wallet')}}
+              </p>
+              <p class="count">{{parseFloat(assetData.transaction_balance).toFixed(2)}}</p>
+            </div>
+            <div class="wallet-item" @click="$router.push('/finance/exchangeasset')">
+              <p class="count-title">
+                {{$t('common.consumption_wallet')}}
+              </p>
+              <p class="count">{{parseFloat(assetData.transaction_balance).toFixed(2)}}</p>
+            </div>
+          </div>
         </div>
-          <div class="devlop-line">
-            <span class="line"></span> <span>{{$t('common.developing')}}</span> <span class="line"></span>
+
+        <div class="devlop-box">
+          <div class="devlop-ing">
+            <span class="devlop-icon devlop-left"></span>
+            <span class="devlop-text">{{$t('common.developing')}}</span>
+            <span class="devlop-icon devlop-right"></span>
           </div>
           <div class="development">
             <div class="develop-item" v-for="(item,index) in developments" :key="index">
@@ -69,6 +79,7 @@
               </div>
             </div>
           </div>
+        </div>
       </div>
 
       <div>
@@ -137,9 +148,6 @@
           },{
             imgPath: require('../../assets/img/icon/home_icon_11.png'),
             devTitle: this.$t('index.app_11')
-          },{
-            imgPath: require('../../assets/img/icon/home_icon_12.png'),
-            devTitle: this.$t('index.app_12')
           }
         ]
       };
@@ -190,22 +198,22 @@
   .finance {
     .home-icon {
       width: 100%;
-      height: 800px;
-      background: url('../../assets/img/icon/Logo.gif');
-      background-size: 100% 100%;
+      height: 580px;
+      background: url('../../assets/img/icon/index_bg.png') no-repeat;
+      background-size: contain;
       font-family: PingFangSC-Medium;
       text-align: center;
-      padding-top: 284px;
+      padding-top: 120px;
      
       .user-icon {
-        width: 130px;
-        height: 130px;
-        border: 8px solid rgba(255,255,255,0.30);
+        width: 160px;
+        height: 160px;
+        border: 5px solid white;
         border-radius: 50%;
         overflow: hidden;
         margin: 0 auto;
         display: flex;
-        margin-bottom: 14px;
+        margin-bottom: 18px;
         img {
           width: 100%;
           height: 100%;
@@ -218,8 +226,17 @@
         margin-bottom: 6px;
       }
       .user-uid {
-        font-size: 26px;
-        color: #DFC370;
+        font-size: 22px;
+        color: #555555;
+        text-align: center;
+        &>span {
+          display: inline-block;
+          background: #E9E9E9;
+          height: 45px;
+          line-height: 45px;
+          border-radius: 45px;
+          padding: 0 30px;
+        }
       }
     }
 
@@ -228,27 +245,25 @@
       .total-assets-box {
         width: 100%;
         margin-top: -145px;
-        border-radius: 10px;
+        border-radius: 20px;
         .total-assets {
           width: 100%;
-          height: 401px;
-          padding: 40px 24px 0px;
-          background:rgba(255,255,255,1);
+          height: 310px;
+          padding: 30px 24px 0px;
+          background:white;
           box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
-          border-radius: 10px;
-          margin-bottom: 45px;
+          border-radius: 20px;
+          margin-bottom: 20px;
           .assets-count {
             display: flex;
-            border-bottom: 1px solid #E6E6E6 ;
-            padding-bottom: 32px;
             .count-left {
               flex: 1;
 
               .count-title {
                 font-family: PingFangSC-Regular;
-                font-size: 30px;
-                color: #878787;
-                margin-bottom: 16px;
+                font-size: 25px;
+                color: #66707E;
+                margin-bottom: 5px;
                 margin-top: 8px;
 
                 img {
@@ -261,16 +276,19 @@
               .count {
                 font-family: PingFangSC-Regular;
                 font-size: 40px;
-                color: #212121;
+                color: #0D0D0D;
                 letter-spacing: 0;
-                line-height: 100px;
+                line-height: 70px;
+                font-weight: bold;
               }
             }
 
             .count-right {
-              width: 188px;
-              height: 176px;
-              margin-right: 24px;
+              width: 230px;
+              margin-right: 0;
+              position: relative;
+              top: -24px;
+              left: 48px;
 
               img {
                 width: 100%;
@@ -281,49 +299,82 @@
           }
           .count-bottom {
                display: flex;
+               padding: 20px 0;
+               background: #F0F2F4;
+               position: relative;
+               top: -30px;
+               border-radius: 20px;
               
                .bottom-item {
-                 padding: 24px 0 24px 52px;
                  width: 50%;
                  height: 100%;
+                 text-align: center;
                  &:first-child {
-                   border-right: 1px solid #E6E6E6;
+                   border-right: 1px solid #DFE0E4;
                  }
                  .title {
                     font-family: PingFangSC-Regular;
-                    font-size: 28px;
-                    color: #878787;
-                    line-height: 40px;
-                    margin-bottom: 8px;
+                    font-size: 18px;
+                    color: #00002C;
+                    .icon {
+                      height: 24px;
+                      width: 24px;
+                      background: url("../../assets/img/icon/VIP.png") no-repeat;
+                      background-size: contain;
+                      display: inline-block;
+                      margin-right: 8px;
+                      position: relative;
+                      top: 1px;
+                    }
+                    .icon-profit {
+                      background-image: url("../../assets/img/icon/shouyi.png");
+                    }
                  }
                  .number {
                     font-family: PingFangSC-Regular;
-                    font-size: 28px;
-                    color: #545454;
-                    line-height: 56px;
+                    font-size: 34px;
+                    font-weight: bold;
+                    color: #5B636D;
                  }
                }
          }
         }
         .notice-swiper {
-          height: 40px;
+          height: 80px;
+          border-radius: 80px;
+          background: white;
+          box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
           swiperSlide {
              height: 100%;
          }
            .notice {
               font-size: 28px;
+              padding: 20px;
               line-height: 40px;
+              overflow: hidden;
               display: flex;
               span {
                 word-break:keep-all;           /* 不换行 */
                 white-space:nowrap;          /* 不换行 */
                 overflow:hidden;               /* 内容超出宽度时隐藏超出部分的内容 */
                 text-overflow:ellipsis;
+                color: #A7ABB8;
              }
               img {
                 width: 40px;
                 height: 40px;
-                margin-right: 20px;
+                margin-right: 10px;
+            }
+            .notice-title {
+              color: #D4A55D;
+              font-size: 35px;
+              display: inline-block;
+              width: 120px;
+              padding-right: 10px;
+              font-weight: bold;
+              font-style: italic;
+              border-right: 1px solid #A7ABB8;
+              margin-right: 15px;
             }
           }
         }
@@ -331,104 +382,114 @@
         .wallet-box {
           display: flex;
           width: 100%;
-          height: 181px;
           justify-content: space-between;
           margin-top: 40px;
           .wallet-item {
-            width: calc(50% - 16px);
+            width: calc(33% - 16px);
             height: 100%;
-            background: #fff;
-            padding: 32px 0 0 24px;
             box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
-            border-radius: 10px;
-              .count-title {
-                font-family: PingFangSC-Regular;
-                font-size: 30px;
-                color: #878787;
-                margin-bottom: 16px;
-                margin-top: 8px;
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            background: url("../../assets/img/icon/money_bg1.png") no-repeat center center;
+            .count-title {
+              font-family: PingFangSC-Regular;
+              font-size: 18px;
+              color: #FEFFFF;
+            }
 
-                img {
-                  width: 36px;
-                  height: 36px;
-                  margin-right: 10px;
-                }
-              }
-
-              .count {
-                font-family: PingFangSC-Regular;
-                font-size: 30px;
-                line-height: 67px;
-                color: #212121;
-              }
+            .count {
+              font-family: PingFangSC-Regular;
+              font-size: 32px;
+              font-weight: bold;
+              line-height: 60px;
+              color: #FEFFFF;
+            }
+            &:nth-child(2) {
+              background-image: url("../../assets/img/icon/money_bg2.png");
+            }
+            &:nth-child(3) {
+              background-image: url("../../assets/img/icon/money_bg3.png");
+            }
           }
         }
       }
-      .devlop-line {
+      .devlop-box {
         font-family: PingFangSC-Regular;
         font-size: 32px;
         line-height: 45px;
         color: #878787;
-        display: flex;
         align-items: center;
-        margin-top: 53px;
+        margin-top: 40px;
         margin-bottom: 33px;
-        span {
-          width: calc(100% - 464px - 98px);
-          display: inline-block;
-          overflow: hidden;
-          text-overflow:ellipsis;
-          white-space: nowrap;
+        background: white;
+        border-radius: 50px;
+        padding: 30px;
+        box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
+        .devlop-ing {
           text-align: center;
-          &.line {
-            width: 232px;
-            height: 2px;
-            background-color: #ccc;
-            &:first-child {
-              margin-right: 49px;
-            }
-
-            &:last-child {
-              margin-left: 49px;
-            }
-
+          width: 100%;
+          font-weight: bold;
+          .devlop-icon {
+            display: inline-block;
+            background: url("../../assets/img/icon/devlop_left.png") no-repeat;
+            width: 20px;
+            height: 30px;
+            background-size: contain;
+          }
+          .devlop-left {
+            display: inline-block;
+          }
+          .devlop-right {
+            background-image: url("../../assets/img/icon/devlop_right.png");
+          }
+          .devlop-text {
+            position: relative;
+            top: -3px;
           }
         }
-        
-  
-      }
-      .development {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-        .develop-item {
-          width: 220px;
-          height: 186px;
-          background: #fff;
-          margin-right: 12px;
-          margin-bottom: 13px;
-          box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
-          border-radius:10px;
-          &:nth-child(3n) {
-            margin-right: 0;
+        .development {
+          clear: both;
+          content: " ";
+          display: block;
+          overflow: hidden;
+          text-align: center;
+          .develop-item {
+            float: left;
+            border-radius: 10px;
+            font-size: 22px;
+            width: calc(34.3999% - 20px);
+            height: 200px;
+            line-height: 105px;
+            background: #FFF7ED;
+            img {
+              width: 70px;
+              position: relative;
+              top: 25px;
+            }
+            &:nth-child(2),&:nth-child(5),&:nth-child(8),&:nth-child(11) {
+              margin: 20px 20px 0;
+            }
+            &:nth-child(2),&:nth-child(5),&:nth-child(6) {
+              img {
+                width: 80px;
+              }
+            }
+            &:nth-child(7) {
+              img {
+                width: 90px;
+              }
+            }
+            &:nth-child(3), &:nth-child(11) {
+              img {
+                width: 60px;
+              }
+            }
+            & {
+              margin-top: 20px;
+            }
           }
-          img {
-            display: block;
-            margin: 34px auto 19px;
-            width: 74px;
-            height: 74px;
-          }
-          .develop-title {
-            font-size:30px;
-            font-family:PingFang-SC-Regular;
-            color:rgba(34,34,34,1);
-            text-align: center;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-          }
-        } 
+        }
       }
     }
 
