@@ -42,6 +42,10 @@
 7. 后台默认账号密码
   admin 888888
 
+8. 脚本运行api下的app后缀为engine的都运行了
+  api目录下执行 export PYTHONPATH=$(pwd)
+  就可以运行脚本了
+
 
 
 
