@@ -12,12 +12,12 @@ module.exports = {
     localeRoot: path.resolve(__dirname, '../src/app/i18n/locale'),
   },
   oss: {
-    // accessKeyId: 'LTAId5JGkZzEFYSw',
-    accessKeyId: 'LTAIAcbhNn2UEmwN',
-    // accessKeySecret: 'y9DCNzafnatLMxE1s7IxqvI5NlQe0M',
-    accessKeySecret: '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ',
-    bucket: 'tdb99',
-    // bucket: 'xiaoyu168',
+    accessKeyId: 'LTAId5JGkZzEFYSw',
+    // accessKeyId: 'LTAIAcbhNn2UEmwN',
+    accessKeySecret: 'y9DCNzafnatLMxE1s7IxqvI5NlQe0M',
+    // accessKeySecret: '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ',
+    // bucket: 'tdb99',
+    bucket: 'xiaoyu168',
     region: 'oss-ap-southeast-1',
   },
   build: {
