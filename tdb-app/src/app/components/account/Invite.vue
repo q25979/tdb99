@@ -18,7 +18,7 @@
         v-clipboard:error="copyError">
         {{copyTxt}}
       </mt-button>
-      <VueQrcode :value="`http://qr.lebo2019plus.com/register/${memberProfile.uid}`" tag="img" :options="{size: 310}"></VueQrcode>
+      <VueQrcode :value="`http://web.tdb99.com/register/${memberProfile.uid}`" tag="img" :options="{size: 310}"></VueQrcode>
       <div class="tips-2">
         {{$t('account.invite_tips2')}}
       </div>
