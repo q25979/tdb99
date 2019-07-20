@@ -204,7 +204,7 @@
               confirmButtonText: this.$t('common.ok')
             }).then(() => {
               let nextPage = document.createElement('a');
-              nextPage.setAttribute('href', 'http://download.lebo2019plus.com');
+              nextPage.setAttribute('href', 'http://download.tdb99.com');
               nextPage.click();
             });
           } else {

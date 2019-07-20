@@ -1,7 +1,7 @@
 {
-  "name": "LEBO",
+  "name": "TDB",
   "version": "1.0.0",
-  "description": "LEBO",
+  "description": "TDB",
   "author": "devsmart",
   "scripts": {
     "start": "node run.js",

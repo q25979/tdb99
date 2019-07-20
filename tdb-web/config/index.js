@@ -19,8 +19,8 @@ module.exports = {
   },
   build: {
     env: require('./prod.env'),
-    ossBasePath: ossBasePath,
-    cdnBasePath: cdnBasePath,
+    //ossBasePath: ossBasePath,
+    //cdnBasePath: cdnBasePath,
     index: path.resolve(__dirname, '../dist/final/public/index.html'),
     distRoot: path.resolve(__dirname, '../dist'),
     serverRoot: path.resolve(__dirname, '../dist/final'),
