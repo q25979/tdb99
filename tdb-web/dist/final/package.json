@@ -59,7 +59,7 @@
     "function-bind": "^1.1.0",
     "hanzi-tools": "^1.2.0",
     "html-webpack-plugin": "^2.28.0",
-    "http-proxy-middleware": "^0.17.3",
+    "http-proxy-middleware": "^0.19.1",
     "jsonfile": "^4.0.0",
     "mint-ui": "^2.2.12",
     "node-sass": "^4.5.3",

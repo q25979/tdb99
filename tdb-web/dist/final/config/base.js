@@ -1,5 +1,5 @@
 module.exports = {
-  appName: 'LEBO',
-  apiEndPoint: 'http://api.lebo.test.eos-club.in',
+  appName: 'TDB',
+  apiEndPoint: 'http://api.tdb99.com',
   cdn: '//xiaoyu168.oss-ap-southeast-1.aliyuncs.com',
 };
