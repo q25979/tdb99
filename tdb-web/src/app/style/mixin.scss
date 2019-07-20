@@ -1,0 +1,16 @@
+@function px2rem($px){
+  $rem : 37.5px;
+  @return ($px/$rem) + rem;
+}
+
+@mixin clearfix() {
+  &:before {
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+  }
+}
+

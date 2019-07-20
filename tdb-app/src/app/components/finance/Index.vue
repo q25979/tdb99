@@ -425,6 +425,10 @@
         background: white;
         border-radius: 50px;
         padding: 30px;
+        padding-bottom: 160px;
+        background: url("../../assets/img/icon/develop_bg.png") no-repeat;
+        background-position: right bottom;
+        background-size: contain;
         box-shadow:0px 0px 20px 0px rgba(160, 118, 148, 0.35);
         .devlop-ing {
           text-align: center;

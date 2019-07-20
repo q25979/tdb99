@@ -1,0 +1,17 @@
+{
+  "apps": [
+    {
+      "script": "run.js",
+      "env_production": {
+        "name": "lebo-qrcode",
+        "NODE_ENV": "production",
+        "PORT": 7030
+      },
+      "env": {
+        "name": "lebo-qrcode-test",
+        "NODE_ENV": "development",
+        "PORT": 7031
+      }
+    }
+  ]
+}

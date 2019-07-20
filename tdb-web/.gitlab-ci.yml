@@ -1,0 +1,6 @@
+image: node:7.9
+lint:
+    script:
+    - npm install
+    - npm run lint
+
