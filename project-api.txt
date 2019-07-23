@@ -12,7 +12,7 @@ oss      阿里云
 远程连接：202564
 ip: 47.244.23.221
 user: root
-pass: @Aa123123
+pass: qs&ct1color
 MAC连接：ssh -l root 47.244.23.221
 测试：ssh -l root 47.111.94.99
 
@@ -36,6 +36,8 @@ console.tdb99.com	后台
   admin 111111
 www.tdb99.com		前端
 ================================
+
+71657fee075e49ecb6dea561fd321283
 
 
 

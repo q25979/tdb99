@@ -65,10 +65,10 @@ class PinCodeSms(Resource):
                 country_code = '+' + parsed_args['country_code']
 
         code = str(random.randint(100000, 999999))
-        clnt = YunpianClient('fcf725316cbb8ff1438c90ff76c6cebe')
+        clnt = YunpianClient('71657fee075e49ecb6dea561fd321283')
         if not country_code or country_code == '+86':
             param = {YC.MOBILE: parsed_args['mobile'],
-                     YC.TEXT: '【乐宝】您正在使用乐宝，验证码：{}。请勿向任何人包括客服提供验证码。'.format(code)}
+                     YC.TEXT: '【腾达】您正在使用腾达，验证码：{}。请勿向任何人包括客服提供验证码。'.format(code)}
 
         else:
             param = {YC.MOBILE: country_code + parsed_args['mobile'],
