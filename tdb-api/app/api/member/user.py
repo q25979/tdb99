@@ -38,7 +38,7 @@ class MemberUserMobileRegisterApi(Resource):
         parser.add_argument('mobile', type=str, required=True, nullable=False, location='json')
         parser.add_argument('password', type=str, required=True, nullable=False, location='json')
         parser.add_argument('security_password', type=str, required=True, nullable=False, location='json')
-        parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
+        # parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('source', type=str, default='', location='json')
         parser.add_argument('sponsor_uid', type=str, required=True, nullable=False, location='json')
         # parser.add_argument('uuid', type=str, required=True, nullable=False, location='json')
@@ -55,18 +55,18 @@ class MemberUserMobileRegisterApi(Resource):
         # 测试环境，不验证手机验证码
         # product_name = str(current_app.config['PRODUCT_NAME'])
 
-        country_code = parsed_args['country_code']
-        if parsed_args['country_code']:
-            if "+" in parsed_args['country_code']:
-                country_code = parsed_args['country_code'][1:]
+        # country_code = parsed_args['country_code']
+        # if parsed_args['country_code']:
+        #     if "+" in parsed_args['country_code']:
+        #         country_code = parsed_args['country_code'][1:]
 
         if member_user_mobile_exists(parsed_args['mobile']):
             abort(400, code=1011, message={'mobile': 'mobile already exists'})
 
-        SmsPinCode.flask_check(parsed_args['mobile'], parsed_args['pin_code'])
+        # SmsPinCode.flask_check(parsed_args['mobile'], parsed_args['pin_code'])
 
         user = User(id=str(uuid.uuid4()),
-                    country_code=country_code,
+                    # country_code=country_code,
                     mobile=parsed_args['mobile'],
                     source=parsed_args['source'],
                     sponsor_id=sponsor.id)
@@ -92,7 +92,7 @@ class MemberUserPasswordLoginApi(Resource):
         parser.add_argument('mobile', type=str, required=True, nullable=False, location='json')
         parser.add_argument('uuid', type=str, required=True, nullable=False, location='json')
         parser.add_argument('password', type=str, required=True, nullable=False, location='json')
-        parser.add_argument('captcha_pin_code', type=str, required=True, nullable=False, location='json')
+        # parser.add_argument('captcha_pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('client_ip', type=str, default=request.access_route[0], location='json')
         parser.add_argument('platform', type=str, nullable=False, default='android', location='json')
         parsed_args = parser.parse_args()
@@ -101,7 +101,7 @@ class MemberUserPasswordLoginApi(Resource):
         if user is None:
             abort(400, code=1001, message={'unique_id': 'user does not exist'})
 
-        CaptchaPinCode.flask_check(parsed_args['uuid'], parsed_args['captcha_pin_code'])
+        # CaptchaPinCode.flask_check(parsed_args['uuid'], parsed_args['captcha_pin_code'])
 
         if user.verify_password(parsed_args['password']):
             user.generate_auth_token()
@@ -232,7 +232,7 @@ class MemberUserResetPasswordApi(Resource):
     def post(self):
         parser = CustomRequestParser()
         parser.add_argument('mobile', type=str, required=True, nullable=False, location='json')
-        parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
+        # parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('password', type=str, required=True, nullable=False, location='json')
         # parser.add_argument('uuid', type=str, required=True, nullable=False, location='json')
         # parser.add_argument('captcha_pin_code', type=str, required=True, nullable=False, location='json')
@@ -240,7 +240,8 @@ class MemberUserResetPasswordApi(Resource):
 
         # CaptchaPinCode.flask_check(parsed_args['uuid'], parsed_args['captcha_pin_code'])
 
-        user = User.reset_password(parsed_args['mobile'], parsed_args['pin_code'], parsed_args['password'])
+        # user = User.reset_password(parsed_args['mobile'], parsed_args['pin_code'], parsed_args['password'])
+        user = User.reset_password(parsed_args['mobile'], parsed_args['password'])
         if not user:
             abort(400, code=1001, message={'mobile': 'user does not exist'})
         db.session.commit()
@@ -254,7 +255,7 @@ class MemberUserResetSecurityPasswordApi(Resource):
     def post(self):
         parser = CustomRequestParser()
         parser.add_argument('mobile', type=str, required=True, nullable=False, location='json')
-        parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
+        # parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('password', type=str, required=True, nullable=False, location='json')
         # parser.add_argument('uuid', type=str, required=True, nullable=False, location='json')
         # parser.add_argument('captcha_pin_code', type=str, required=True, nullable=False, location='json')
@@ -262,7 +263,8 @@ class MemberUserResetSecurityPasswordApi(Resource):
 
         # CaptchaPinCode.flask_check(parsed_args['uuid'], parsed_args['captcha_pin_code'])
 
-        user = User.reset_security_password(parsed_args['mobile'], parsed_args['pin_code'], parsed_args['password'])
+        # user = User.reset_security_password(parsed_args['mobile'], parsed_args['pin_code'], parsed_args['password'])
+        user = User.reset_security_password(parsed_args['mobile'], parsed_args['password'])
         if not user:
             abort(400, code=1001, message={'mobile': 'user does not exist'})
         db.session.commit()
@@ -277,16 +279,16 @@ class MemberUserRebindIdApi(Resource):
     def post(self):
         parser = CustomRequestParser()
         parser.add_argument('mobile', type=str, required=True, nullable=False, location='json')
-        parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
+        # parser.add_argument('pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('new_mobile', type=str, required=True, nullable=False, location='json')
         parser.add_argument('new_pin_code', type=str, required=True, nullable=False, location='json')
         parser.add_argument('country_code', type=str, location='json')
         parsed_args = parser.parse_args()
 
         g.current_user.rebind_id(parsed_args['mobile'],
-                                 parsed_args['pin_code'],
+                                 # parsed_args['pin_code'],
                                  parsed_args['new_mobile'],
-                                 parsed_args['new_pin_code'],
+                                 # parsed_args['new_pin_code'],
                                  parsed_args['country_code'])
         db.session.commit()
         return {}

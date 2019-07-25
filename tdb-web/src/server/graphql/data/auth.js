@@ -26,9 +26,9 @@ const mobileRegisterInputType = new g.GraphQLInputObjectType({
     name: {
       type: g.GraphQLString
     },
-    pin_code: {
-      type: g.GraphQLString
-    },
+    // pin_code: {
+    //   type: g.GraphQLString
+    // },
     password: {
       type: g.GraphQLString
     },

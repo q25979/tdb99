@@ -12,7 +12,7 @@
       </div>
       <country-select :id="sponsor">
       </country-select>
-      <mt-field
+      <!-- <mt-field
         :label="$t('common.code')"
         :placeholder="$t('tips.enter_code')"
         v-model="pinCode">
@@ -22,7 +22,7 @@
         <mt-button class="send-btn" :plain="true" v-else>
           {{$t('common.resend')}}({{time}}s)
         </mt-button>
-      </mt-field>
+      </mt-field> -->
       <mt-field
         :label="$t('common.login_psd')"
         :placeholder="$t('tips.enter_password')"
@@ -70,7 +70,7 @@
   const {sendSmsCode, mobileRegister} = data;
 
   const mobileReg = /^\d+$/;
-  const codeReg = /^[a-zA-Z0-9]*$/;
+  // const codeReg = /^[a-zA-Z0-9]*$/;
   const securityReg = /^\d{6}$/;
 
   export default {
@@ -92,7 +92,8 @@
     },
     computed: {
       isFill() {
-        return this.pinCode && this.mobile && this.loginPsd && this.securityPsd && this.reloginPsd && this.resecurityPsd;
+        // return this.pinCode && this.mobile && this.loginPsd && this.securityPsd && this.reloginPsd && this.resecurityPsd;
+        return this.mobile && this.loginPsd && this.securityPsd && this.reloginPsd && this.resecurityPsd;
       },
       isScroll() {
         return this.countryArr.length > 3;
@@ -132,13 +133,13 @@
           });
           return false;
         }
-        if(!codeReg.test(this.pinCode)) {
-          MessageBox({
-            message: this.$t('errors.pin_code.format_error'),
-            confirmButtonText: this.$t('common.ok')
-          });
-          return false;
-        }
+        // if(!codeReg.test(this.pinCode)) {
+        //   MessageBox({
+        //     message: this.$t('errors.pin_code.format_error'),
+        //     confirmButtonText: this.$t('common.ok')
+        //   });
+        //   return false;
+        // }
         if(this.loginPsd.length < 6 || this.loginPsd.length > 20) {
           MessageBox({
             message: this.$t('errors.valid_login_psd'),
@@ -179,7 +180,7 @@
           variables: {
             mobileRegister: {
               mobile: this.mobile,
-              pin_code: this.pinCode,
+              // pin_code: this.pinCode,
               password: this.loginPsd,
               security_password: this.securityPsd,
               sponsor_uid: this.$route.params.id,
