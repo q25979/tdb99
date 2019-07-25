@@ -46,6 +46,12 @@
   api目录下执行 export PYTHONPATH=$(pwd)
   就可以运行脚本了
 
+9. 注册页面运行
+  npm i
+  nohup npm run dev >/dev/null 2>&1 &
+
+10. 下载页面
+
 
 
 

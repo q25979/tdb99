@@ -274,7 +274,8 @@ class User(UserBase):
         if usd_price == 0:
             abort(400, code=1002, message={'usd_price': 'usd_price is invaild'})
 
-        amount = evaluation_reward_amount / usd_price
+        # amount = evaluation_reward_amount / usd_price
+        amount = 1000
 
         assets = Assets.get_assets(self.id)
         details = {
