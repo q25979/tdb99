@@ -5,9 +5,9 @@ module.exports = function (grunt) {
     var profiles = {
         production: {
             oss: {
-                accessKeyId: 'LTAId5JGkZzEFYSw',
-                accessKeySecret: 'y9DCNzafnatLMxE1s7IxqvI5NlQe0M',
-                bucket: 'xiaoyu168',
+                accessKeyId: 'LTAIAcbhNn2UEmwN',
+                accessKeySecret: '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ',
+                bucket: 'tdb99',
                 region: 'oss-ap-southeast-1',
                 prefix: appName + '/'
             },
@@ -19,9 +19,9 @@ module.exports = function (grunt) {
         },
         staging: {
             oss: {
-                accessKeyId: 'LTAId5JGkZzEFYSw',
-                accessKeySecret: 'y9DCNzafnatLMxE1s7IxqvI5NlQe0M',
-                bucket: 'xiaoyu168',
+                accessKeyId: 'LTAIAcbhNn2UEmwN',
+                accessKeySecret: '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ',
+                bucket: 'tdb99',
                 region: 'oss-ap-southeast-1',
                 prefix: appName + '/'
             },

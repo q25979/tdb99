@@ -16,13 +16,13 @@ class Config(object):
 
     LOG_LEVEL = 'DEBUG'
 
-    ALIYUN_ACCESS_KEY_ID = 'LTAId5JGkZzEFYSw'
-    ALIYUN_ACCESS_KEY_SECRET = 'y9DCNzafnatLMxE1s7IxqvI5NlQe0M'
+    ALIYUN_ACCESS_KEY_ID = 'LTAIAcbhNn2UEmwN'
+    ALIYUN_ACCESS_KEY_SECRET = '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ'
 
-    OSS_REGION = 'oss-ap-southeast-1'
-    OSS_CDN_URL = '//xiaoyu168.oss-ap-southeast-1.aliyuncs.com'
-    OSS_ENDPOINT = 'oss-ap-southeast-1.aliyuncs.com'
-    OSS_BUCKET = 'xiaoyu168'
-    OSS_ROOT = '/lebo-console/'
+    OSS_REGION = 'oss-cn-beijing'
+    OSS_CDN_URL = '//tdb99.oss-cn-beijing.aliyuncs.com'
+    OSS_ENDPOINT = 'oss-cn-beijing.aliyuncs.com'
+    OSS_BUCKET = 'tdb99'
+    OSS_ROOT = '/tdb-console/'
 
     FRONT_URL = 'http://127.0.0.1:8089/redirect_index'

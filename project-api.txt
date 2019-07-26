@@ -40,6 +40,16 @@ www.tdb99.com		前端
 71657fee075e49ecb6dea561fd321283
 
 
+ALIYUN_ACCESS_KEY_ID = 'LTAIAcbhNn2UEmwN'
+ALIYUN_ACCESS_KEY_SECRET = '2eUtOlKOeYhESzJFUR2XQgaItCSOQQ'
+
+OSS_REGION = 'oss-cn-beijing'
+OSS_CDN_URL = 'http://tdb99.oss-cn-beijing.aliyuncs.com'
+OSS_ENDPOINT = 'oss-cn-beijing.aliyuncs.com'
+OSS_BUCKET = 'tdb99'
+OSS_ROOT = 'lebo-app/'
+
+
 
 
 
