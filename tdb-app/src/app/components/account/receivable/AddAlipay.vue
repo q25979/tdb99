@@ -53,6 +53,7 @@ export default {
       }
     },
     onFail(message) {
+      console.log("Failed");
       alert(message);
     },
     dataURLtoFile(dataurl) {
@@ -67,6 +68,7 @@ export default {
       return new Blob([u8arr], { type: mime });
     },
     onSuccess(imageData) {
+      console.log("Success");
       let imageUrl = "data:image/jpeg;base64," + imageData;
       let param = new FormData();
       param.append('attachment', this.dataURLtoFile(imageUrl));

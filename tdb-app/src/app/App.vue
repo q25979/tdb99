@@ -9,19 +9,19 @@ export default {
     };
   },
   mounted() {
-    if(this.extraPath.indexOf(this.$route.name) > -1) {
-      StatusBar.backgroundColorByHexString("#1E1C14");
-    } else {
-      StatusBar.backgroundColorByHexString("#1E1C14");
-    }
+    // if(this.extraPath.indexOf(this.$route.name) > -1) {
+    //   StatusBar.backgroundColorByHexString("#1E1C14");
+    // } else {
+    //   StatusBar.backgroundColorByHexString("#1E1C14");
+    // }
   },
   watch: {
     $route(val) {
-      if(this.extraPath.indexOf(val.name) > -1) {
-        StatusBar.backgroundColorByHexString("#1E1C14");
-      } else {
-        StatusBar.backgroundColorByHexString("#1E1C14");
-      }
+      // if(this.extraPath.indexOf(val.name) > -1) {
+      //   StatusBar.backgroundColorByHexString("#1E1C14");
+      // } else {
+      //   StatusBar.backgroundColorByHexString("#1E1C14");
+      // }
     }
   }
 };

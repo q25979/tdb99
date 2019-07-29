@@ -25,13 +25,13 @@ Vue.use(gallery);
 
 
 // document.addEventListener("deviceready", () => {
-//   // if(localStorage.getItem('theme') == 'dark') {
-//   //   StatusBar.backgroundColorByHexString("#000");
-//   //   StatusBar.styleLightContent();
-//   // } else {
+//   if(localStorage.getItem('theme') == 'dark') {
+//     StatusBar.backgroundColorByHexString("#000");
+//     StatusBar.styleLightContent();
+//   } else {
 //   StatusBar.backgroundColorByHexString("#fff");
 //   StatusBar.styleDefault();
-//   // }
+//   }
 // }, false);
 
 Vue.config.productionTip = false;
