@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import MainContainer from 'app/components/elements/MainContainer';  
-import PasswordInput from 'app/components/elements/PasswordInput';  
+import MainContainer from 'app/components/elements/MainContainer';
+import PasswordInput from 'app/components/elements/PasswordInput';
 export default {
   data() {
     return {
@@ -240,7 +240,7 @@ export default {
           }
         }
       }
-    } 
+    }
     .mint-navbar {
       height: 88px;
       background: transparent !important;
@@ -277,4 +277,3 @@ export default {
     }
   }
 </style>
-

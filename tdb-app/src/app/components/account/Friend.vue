@@ -17,7 +17,7 @@
             {{$t('account.friend_generation_count', {n: generation})}}：{{dataList.length}}
           </span>
           <span>
-            {{$t('account.friend_total')}}：{{memberProfile.cal_team_count}}
+            {{$t('account.friend_total')}}：{{memberProfile.cal_team_count}}3
           </span>
         </div>
       </header>
@@ -178,12 +178,12 @@ export default {
       border-bottom: 2px solid #E6E6E6;
       margin-left: 32px;
     }
-    
+
     .icon {
       width: 44px;
       height: 44px;
       &.icon-person-blue {
-        background-image: url('../../assets/img/icon_person_blue.png');      
+        background-image: url('../../assets/img/icon_person_blue.png');
       }
     }
     .phone_time {
@@ -209,4 +209,3 @@ export default {
     transform: translateY(-100%);
   }
 </style>
-
