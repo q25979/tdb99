@@ -17,7 +17,7 @@
             {{$t('account.friend_generation_count', {n: generation})}}：{{dataList.length}}
           </span>
           <span>
-            {{$t('account.friend_total')}}：{{memberProfile.cal_team_count}}3
+            {{$t('account.friend_total')}}：{{memberProfile.cal_team_count}}
           </span>
         </div>
       </header>
