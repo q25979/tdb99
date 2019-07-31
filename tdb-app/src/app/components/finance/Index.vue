@@ -505,12 +505,13 @@
           display: block;
           overflow: hidden;
           text-align: center;
+          width: 100%;
 
           .develop-item {
             float: left;
             border-radius: 10px;
             font-size: 22px;
-            width: calc(34.3999% - 20px);
+            width: calc((100% / 3) - (0.266667rem * 0.7));
             height: 200px;
             line-height: 105px;
             background: #FFF7ED;

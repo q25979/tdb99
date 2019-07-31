@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>下载安装</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style>
+			body,html,.page {
+				background: #fff;
+				position: relative;
+				width:100%;
+				height:100%;
+				margin:0;
+				text-align: center;
+			}
+			.left-bg {
+				position: absolute;
+				left:0;
+				top:0;
+				width:auto;
+				height:33%;
+			}
+			.right-bg {
+				position: absolute;
+				right:0;
+				top:0;
+				width:auto;
+				height:33%;
+			}
+			.cont {
+				position: absolute;
+				top:25%;
+				width:100%;
+			}
+			.logo-img {
+				width:25%;
+				height:auto;
+			}
+			.logo-name {
+				font-weight: bold;
+				color:#505556;
+				font-size: 26px;
+				margin:15px 0;
+			}
+			.line {
+				width: 65%;
+				height:1px;
+				background: #e4eaea;
+				margin-left:17.5%;
+			}
+			.phone-icon {
+				width:15%;
+				height: auto;
+				margin:10px 0;
+			}
+			.text-desc {
+				color: #a9b0b2;
+				font-size: 16px;
+			}
+			.down-btn {
+				background: #f79a00;
+				color:#fff;
+				font-size: 14px;
+				width:60%;
+				margin:40px 0 0 20%;
+				padding:10px 30px;
+				border-radius: 50px;
+				box-sizing: border-box;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page">
+			<img class="left-bg" src="img/left.png" alt="">
+			<img class="right-bg" src="img/right.png" alt="">
+			<div class="cont">
+				<img class="logo-img" src="img/logo.png" alt="">
+				<div class="logo-name">TDB</div>
+				<div class="line"></div>
+				<img class="phone-icon" src="img/phone-icon.png" alt="">
+				<div class="text-desc">1.2.0（Build 120）- 7.91MB</div>
+				<div class="text-desc">更新于：2019-07-31 09:24:36</div>
+				<div class="down-btn">下载安装</div>
+			</div>
+		</div>
+	</body>
+	<script type='text/javascript' charset='utf-8' src="js/jquery-1.9.1.min.js"></script>
+	<script type='text/javascript' charset='utf-8'>
+		$(".down-btn").on("click",function () {
+            var u = navigator.userAgent;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if(isAndroid){
+                window.location.href = "http://download.tdb99.com/tdb.apk";
+                return;
+            }else {
+			    window.location.href = "http://download.tdb99.com/tdb.ipa";
+			    return;
+			}
+        });
+	</script>
+</html>

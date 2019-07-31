@@ -8,6 +8,7 @@
     "dev": "node build/dev-server.js",
     "staging_build": "export NODE_ENV=production && export API_URL=staging && node build/build.js",
     "production_build": "export NODE_ENV=production && export API_URL=production && node build/build.js",
+    "build": "export NODE_ENV=production && export API_URL=production && node build/build.js",
     "docker-build": "npm run build && cd dist/final && npm i --production && cd ../../ && docker build -t \"${APP_TAG}\" .",
     "lint": "eslint --ext .js,.vue src",
     "mock": "json-server --watch mock/db.json",
