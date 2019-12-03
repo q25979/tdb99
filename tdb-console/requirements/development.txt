@@ -4,7 +4,7 @@ appdirs==1.4.3
 click==6.6
 crcmod==1.7
 dnspython==1.15.0
-ecdsa==0.13
+ecdsa==0.13.3
 et-xmlfile==1.0.1
 etcd==2.0.8
 Flask==0.11.1
