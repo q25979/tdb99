@@ -27,7 +27,7 @@
     "express-graphql": "^0.6.3",
     "font-awesome": "^4.7.0",
     "hanzi-tools": "^1.2.0",
-    "highcharts": "^7.0.3",
+    "highcharts": "^9.0.0",
     "img-vuer": "^0.17.2",
     "node-fetch": "^1.6.3",
     "table-export": "^1.0.2",
