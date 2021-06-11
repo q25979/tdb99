@@ -44,7 +44,7 @@ SQLAlchemy==1.2.8
 toolz==0.9.0
 urllib3==1.23
 web3==4.7.2
-websockets==6.0
+websockets==9.1
 Werkzeug==0.14.1
 oss2==2.1.1
 yunpian-python-sdk==1.0.0
