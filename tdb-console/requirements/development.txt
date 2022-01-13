@@ -18,7 +18,7 @@ openpyxl==2.4.0
 oss2==2.2.0
 packaging==16.8
 paramiko==1.17.2
-Pillow==3.3.1
+Pillow==9.0.0
 pycrypto==2.6.1
 pyexcel==0.2.5
 pyexcel-io==0.2.3
