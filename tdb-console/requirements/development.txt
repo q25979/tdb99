@@ -23,7 +23,7 @@ pycrypto==2.6.1
 pyexcel==0.2.5
 pyexcel-io==0.2.3
 pyexcel-webio==0.0.7
-supervisor==3.3.1
+supervisor==3.3.3
 pyexcel-xls==0.2.3
 pyparsing==2.2.0
 python-etcd==0.4.3
